@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEO Lab · Κεφάλαιο 3 — Στρατηγικές Συγγραφής &amp; Δόμησης για GEO</title>
+<style>
+  /* ============ DESIGN TOKENS (shared system, editorial green/orange accent) ============ */
+  :root{
+    --bg:#f5f5f7; --bg-elev:#fff; --ink:#1d1d1f; --ink-2:#424245; --ink-3:#6e6e73;
+    --hairline:#d2d2d7; --hairline-soft:#e8e8ed;
+    --accent:#1d8a5f; --accent-press:#15724d; --accent2:#ff9500;
+    --blue:#0071e3; --green:#34c759; --green-deep:#248a3d; --red:#ff3b30; --purple:#5e5ce6; --teal:#30b0c7;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    --shadow-md:0 4px 16px rgba(0,0,0,.08);
+    --shadow-lg:0 18px 50px rgba(0,0,0,.12);
+    --radius:22px; --radius-sm:14px;
+    --ease:cubic-bezier(.25,.1,.25,1); --spring:cubic-bezier(.34,1.56,.64,1);
+    --maxw:940px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  body{ font-family:var(--font); background:var(--bg); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden; }
+  body::before{ content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(900px 600px at 12% -8%, rgba(29,138,95,.10), transparent 60%),
+      radial-gradient(800px 600px at 100% 0%, rgba(255,149,0,.08), transparent 55%),
+      radial-gradient(700px 700px at 50% 120%, rgba(48,176,199,.07), transparent 60%); }
+  ::selection{ background:rgba(29,138,95,.18); }
+
+  /* ============ NAV ============ */
+  .nav{ position:sticky; top:0; z-index:100; backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); background:rgba(245,245,247,.72); border-bottom:1px solid var(--hairline-soft); }
+  .nav-in{ max-width:var(--maxw); margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:14px; }
+  .nav .badge{ font-size:12px; font-weight:600; letter-spacing:.02em; color:var(--accent); background:rgba(29,138,95,.10); padding:5px 11px; border-radius:980px; white-space:nowrap; }
+  .nav .title{ font-size:15px; font-weight:600; letter-spacing:-.01em; }
+  .nav .title span{ color:var(--ink-3); font-weight:500; }
+  .nav .prog{ margin-left:auto; display:flex; align-items:center; gap:10px; }
+  .prog-track{ width:120px; height:6px; border-radius:980px; background:var(--hairline-soft); overflow:hidden; }
+  .prog-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:980px; transition:width .6s var(--ease); }
+  .prog-num{ font-size:12px; font-weight:600; color:var(--ink-3); font-variant-numeric:tabular-nums; min-width:34px; text-align:right; }
+  @media(max-width:560px){ .prog-track{ width:64px; } .nav .title{ display:none; } }
+
+  /* ============ LAYOUT ============ */
+  main{ max-width:var(--maxw); margin:0 auto; padding:0 22px 120px; }
+  section{ margin-top:84px; }
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s var(--ease),transform .7s var(--ease); }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ============ HERO ============ */
+  .hero{ padding:78px 0 8px; text-align:center; }
+  .eyebrow{ display:inline-block; font-size:13px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+  .hero h1{ font-size:clamp(34px,6.4vw,60px); font-weight:700; letter-spacing:-.025em; line-height:1.04; margin-bottom:20px; background:linear-gradient(180deg,#1d1d1f 0%,#41414a 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p{ font-size:clamp(17px,2.4vw,21px); color:var(--ink-2); max-width:640px; margin:0 auto; letter-spacing:-.01em; }
+  .hero .meta{ margin-top:26px; display:inline-flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .chip{ font-size:13px; font-weight:500; color:var(--ink-2); background:var(--bg-elev); border:1px solid var(--hairline); padding:7px 14px; border-radius:980px; box-shadow:var(--shadow-sm); }
+
+  /* ============ SECTION HEADINGS ============ */
+  .sec-head{ margin-bottom:26px; }
+  .sec-kicker{ font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:10px; }
+  .sec-head h2{ font-size:clamp(26px,4vw,38px); font-weight:700; letter-spacing:-.02em; line-height:1.1; }
+  .sec-head p{ margin-top:12px; font-size:17px; color:var(--ink-2); max-width:680px; letter-spacing:-.01em; }
+
+  /* ============ CARDS ============ */
+  .card{ background:var(--bg-elev); border-radius:var(--radius); box-shadow:var(--shadow-md); border:1px solid rgba(255,255,255,.6); overflow:hidden; }
+  .card-pad{ padding:30px; }
+  @media(max-width:560px){ .card-pad{ padding:22px; } }
+
+  /* ============ SEGMENTED CONTROL ============ */
+  .seg{ display:inline-flex; background:var(--hairline-soft); border-radius:13px; padding:3px; position:relative; }
+  .seg button{ appearance:none; border:0; background:transparent; cursor:pointer; font-family:inherit; font-size:14px; font-weight:600; color:var(--ink-2); padding:9px 18px; border-radius:10px; position:relative; z-index:2; transition:color .3s var(--ease); }
+  .seg button.active{ color:var(--ink); }
+  .seg .thumb{ position:absolute; top:3px; bottom:3px; border-radius:10px; background:var(--bg-elev); box-shadow:var(--shadow-sm); transition:all .38s var(--spring); z-index:1; }
+
+  /* ============ INFORMATION GAIN DETECTOR ============ */
+  .gain-grid{ display:grid; gap:12px; }
+  .gain-item{ background:#fff; border:1px solid var(--hairline); border-radius:var(--radius-sm); padding:16px 18px; transition:all .35s var(--ease); }
+  .gain-item .stmt{ font-size:14.5px; color:var(--ink); letter-spacing:-.01em; line-height:1.5; }
+  .gain-btns{ display:flex; gap:8px; margin-top:13px; }
+  .gain-btns button{ flex:1; appearance:none; cursor:pointer; font-family:inherit; font-size:13px; font-weight:600; border:1px solid var(--hairline); background:#fff; color:var(--ink-2); padding:10px; border-radius:11px; transition:all .2s var(--ease); }
+  .gain-btns button:hover{ border-color:var(--accent); color:var(--accent); }
+  .gain-btns button:active{ transform:scale(.97); }
+  .gain-item.correct{ border-color:var(--green); background:linear-gradient(180deg,#f1fbf3,#fff); }
+  .gain-item.wrong{ border-color:var(--red); background:linear-gradient(180deg,#fff3f2,#fff); }
+  .gain-item .verdict{ font-size:13px; font-weight:600; margin-top:11px; display:none; }
+  .gain-item.correct .verdict,.gain-item.wrong .verdict{ display:block; }
+  .gain-item.correct .verdict{ color:var(--green-deep); } .gain-item.wrong .verdict{ color:var(--red); }
+  .gain-item.correct .gain-btns,.gain-item.wrong .gain-btns{ opacity:.5; pointer-events:none; }
+  .meter{ margin-top:16px; }
+  .meter-bar{ height:8px; border-radius:980px; background:var(--hairline-soft); overflow:hidden; }
+  .meter-bar i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .5s var(--ease); }
+  .meter-lbl{ font-size:13px; color:var(--ink-3); margin-top:9px; }
+
+  /* ============ BLUF SCANNER ============ */
+  .article{ position:relative; border:1px solid var(--hairline-soft); border-radius:var(--radius-sm); overflow:hidden; background:#fff; }
+  .para{ padding:13px 18px; border-bottom:1px solid var(--hairline-soft); font-size:13.5px; color:var(--ink-2); line-height:1.5; transition:background .3s var(--ease); position:relative; z-index:1; }
+  .para:last-child{ border-bottom:0; }
+  .para .ad{ display:inline-block; font-size:10px; font-weight:700; color:var(--accent2); border:1px solid var(--accent2); border-radius:5px; padding:1px 6px; margin-left:6px; vertical-align:middle; }
+  .para.answer{ background:linear-gradient(90deg,rgba(52,199,89,.12),transparent); }
+  .para.answer b{ color:var(--green-deep); }
+  .para.lit{ background:rgba(255,149,0,.10); }
+  .para.grabbed{ background:linear-gradient(90deg,rgba(52,199,89,.22),rgba(52,199,89,.05)); box-shadow:inset 3px 0 0 var(--green); }
+  .scanline{ position:absolute; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--accent2),transparent); box-shadow:0 0 12px var(--accent2); top:0; opacity:0; z-index:2; }
+  .scan-verdict{ margin-top:16px; border-radius:14px; padding:15px 17px; font-size:14px; font-weight:600; display:none; align-items:center; gap:10px; }
+  .scan-verdict.show{ display:flex; animation:fade .4s var(--ease); }
+  .scan-verdict.ok{ background:linear-gradient(90deg,#f1fbf3,#fff); border:1px solid var(--green); color:var(--green-deep); }
+  .scan-verdict.bad{ background:linear-gradient(90deg,#fff3f2,#fff); border:1px solid var(--red); color:#b3261e; }
+  @keyframes fade{ from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+
+  /* ============ STRUCTURED DATA GRAB ============ */
+  .sd-wall{ font-size:13px; color:var(--ink-2); line-height:1.65; background:#fff; border:1px solid var(--hairline); border-radius:var(--radius-sm); padding:18px; }
+  .sd-table{ width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--hairline); border-radius:var(--radius-sm); overflow:hidden; }
+  .sd-table th,.sd-table td{ text-align:left; padding:11px 14px; font-size:13.5px; border-bottom:1px solid var(--hairline-soft); }
+  .sd-table th{ background:#fafafa; font-weight:700; color:var(--ink); font-size:12.5px; }
+  .sd-table tr:last-child td{ border-bottom:0; }
+  .sd-table tr.grab td{ background:rgba(52,199,89,.14); transition:background .3s var(--ease); }
+  .sd-out{ margin-top:16px; border-radius:14px; padding:16px; display:none; }
+  .sd-out.show{ display:block; animation:fade .4s var(--ease); }
+  .sd-out.clean{ background:linear-gradient(180deg,#f1fbf3,#fff); border:1px solid var(--green); }
+  .sd-out.messy{ background:linear-gradient(180deg,#fff8ef,#fff); border:1px solid var(--accent2); }
+  .sd-out h5{ font-size:13px; font-weight:700; margin-bottom:8px; }
+  .sd-out.clean h5{ color:var(--green-deep); } .sd-out.messy h5{ color:#b06a00; }
+  .sd-rows{ display:grid; gap:6px; }
+  .sd-rows .r{ font-size:13px; color:var(--ink-2); background:#fff; border:1px solid var(--hairline-soft); border-radius:8px; padding:7px 11px; opacity:0; transform:translateX(-6px); transition:all .3s var(--ease); }
+  .sd-rows .r.show{ opacity:1; transform:none; }
+
+  /* ============ CONVERSATIONAL: CONSTRAINT EXTRACTOR ============ */
+  .cq-box{ font-size:18px; line-height:1.7; color:var(--ink); background:linear-gradient(180deg,#fbfbff,#fff); border:1px solid var(--hairline-soft); border-radius:var(--radius-sm); padding:22px 24px; letter-spacing:-.01em; }
+  .cq{ cursor:pointer; border-radius:7px; padding:1px 5px; border-bottom:2px dotted var(--accent); transition:all .2s var(--ease); white-space:nowrap; }
+  .cq:hover{ background:rgba(29,138,95,.10); }
+  .cq.found{ background:rgba(29,138,95,.16); border-bottom:2px solid var(--accent); color:var(--accent-press); font-weight:600; }
+  .cq-list{ margin-top:18px; display:grid; gap:9px; }
+  .cq-row{ display:flex; align-items:center; gap:11px; font-size:14.5px; color:var(--ink-3); transition:color .3s var(--ease); }
+  .cq-row .dot{ width:22px; height:22px; flex:0 0 auto; border-radius:50%; border:2px solid var(--hairline); display:grid; place-items:center; transition:all .3s var(--spring); font-size:12px; }
+  .cq-row.on{ color:var(--ink); } .cq-row.on .dot{ border-color:var(--green); background:var(--green); color:#fff; }
+  .cq-row .ck{ font-weight:600; }
+  .cq-done{ margin-top:16px; font-size:14px; color:var(--ink-2); background:var(--hairline-soft); border-radius:12px; padding:14px 16px; display:none; }
+  .cq-done.show{ display:block; animation:fade .4s var(--ease); }
+
+  /* ============ FAQ PICKER ============ */
+  .faq-q{ font-size:14px; font-weight:600; color:var(--ink); margin-bottom:11px; }
+  .faq-pair{ display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+  @media(max-width:560px){ .faq-pair{ grid-template-columns:1fr; } }
+  .faq-opt{ cursor:pointer; background:#fff; border:1px solid var(--hairline); border-radius:13px; padding:14px 16px; font-size:13.5px; color:var(--ink); transition:all .2s var(--ease); }
+  .faq-opt:hover{ border-color:var(--accent); transform:translateY(-1px); }
+  .faq-opt .tg{ display:block; font-size:10.5px; font-weight:700; letter-spacing:.03em; margin-bottom:5px; color:var(--ink-3); }
+  .faq-opt.right{ border-color:var(--green); background:linear-gradient(180deg,#f1fbf3,#fff); }
+  .faq-opt.right .tg{ color:var(--green-deep); }
+  .faq-opt.wrong{ border-color:var(--red); background:linear-gradient(180deg,#fff3f2,#fff); }
+  .faq-ex{ font-size:13px; color:var(--ink-2); margin-top:10px; display:none; }
+  .faq-ex.show{ display:block; }
+
+  /* ============ QUIZ ============ */
+  .q{ padding:22px 0; border-top:1px solid var(--hairline-soft); }
+  .q:first-child{ border-top:0; padding-top:4px; }
+  .q .qn{ font-size:12px; font-weight:700; color:var(--ink-3); letter-spacing:.03em; }
+  .q .qt{ font-size:17px; font-weight:600; letter-spacing:-.01em; margin:6px 0 15px; }
+  .opts{ display:grid; gap:9px; }
+  .opt{ display:flex; align-items:center; gap:12px; cursor:pointer; background:#fff; border:1px solid var(--hairline); border-radius:13px; padding:14px 16px; font-size:15px; color:var(--ink); transition:all .2s var(--ease); text-align:left; font-family:inherit; width:100%; }
+  .opt:hover{ border-color:var(--accent); transform:translateX(2px); }
+  .opt .mk{ width:22px; height:22px; border-radius:50%; border:2px solid var(--hairline); flex:0 0 auto; display:grid; place-items:center; transition:all .2s var(--ease); }
+  .opt.correct{ border-color:var(--green); background:linear-gradient(90deg,#f1fbf3,#fff); pointer-events:none; }
+  .opt.correct .mk{ border-color:var(--green); background:var(--green); }
+  .opt.wrong{ border-color:var(--red); background:linear-gradient(90deg,#fff3f2,#fff); }
+  .opt.wrong .mk{ border-color:var(--red); background:var(--red); }
+  .opt.locked{ pointer-events:none; opacity:.55; }
+  .q .explain{ margin-top:13px; font-size:14px; color:var(--ink-2); background:var(--hairline-soft); border-radius:12px; padding:13px 15px; display:none; }
+  .q .explain.show{ display:block; animation:fade .4s var(--ease); }
+
+  /* ============ BUTTONS / SUPP / MISC ============ */
+  .btn{ appearance:none; cursor:pointer; font-family:inherit; font-size:15px; font-weight:600; background:var(--accent); color:#fff; border:0; border-radius:980px; padding:13px 24px; transition:transform .15s var(--ease),background .2s var(--ease); white-space:nowrap; }
+  .btn:hover{ background:var(--accent-press); } .btn:active{ transform:scale(.96); }
+  .btn:disabled{ opacity:.5; cursor:default; transform:none; }
+  .btn.ghost{ background:var(--hairline-soft); color:var(--ink); } .btn.ghost:hover{ background:var(--hairline); }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .supp{ background:linear-gradient(180deg,#f6fbf8,#fff); border:1px dashed var(--accent); border-radius:var(--radius-sm); padding:20px 22px; }
+  .supp .tag{ display:inline-flex; align-items:center; gap:7px; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); margin-bottom:11px; }
+  .supp h4{ font-size:16px; font-weight:700; letter-spacing:-.01em; margin-bottom:6px; }
+  .supp p{ font-size:14.5px; color:var(--ink-2); line-height:1.55; }
+  .supp p+p{ margin-top:9px; }
+  .supp .small{ font-size:12.5px; color:var(--ink-3); margin-top:10px; }
+  .supp code{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; background:#eef3ef; padding:1px 6px; border-radius:5px; color:var(--accent-press); }
+  .hint{ font-size:13px; color:var(--ink-3); margin-top:12px; }
+
+  .done{ text-align:center; padding:46px 24px; border-radius:var(--radius); background:linear-gradient(180deg,#eefaf3,#fff); border:1px solid #c9eed8; }
+  .done .mark{ width:72px; height:72px; border-radius:50%; margin:0 auto 18px; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent),var(--accent2)); box-shadow:0 12px 30px rgba(29,138,95,.3); transform:scale(0); transition:transform .6s var(--spring); }
+  .done.in .mark{ transform:scale(1); }
+  .done h3{ font-size:26px; font-weight:700; letter-spacing:-.02em; }
+  .done p{ font-size:16px; color:var(--ink-2); margin-top:10px; }
+  .scorepill{ display:inline-block; margin-top:18px; font-size:15px; font-weight:700; color:var(--accent); background:rgba(29,138,95,.1); padding:9px 18px; border-radius:980px; }
+  footer{ text-align:center; margin-top:80px; font-size:13px; color:var(--ink-3); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <span class="badge">GEO Lab</span>
+    <span class="title">Κεφάλαιο 3 · <span>Στρατηγικές Συγγραφής &amp; Δόμησης</span></span>
+    <div class="prog"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span class="prog-num" id="progNum">0%</span></div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <header class="hero reveal">
+    <span class="eyebrow">Εργαστήριο · Κεφάλαιο 3 από 5</span>
+    <h1>Γράψε για να<br>σε «αρπάξει» η AI</h1>
+    <p>Στο GEO η φλυαρία τιμωρείται και η καθαρή πληροφορία επιβραβεύεται. Τρεις πυλώνες: μοναδικό Κέρδος Πληροφορίας, δομή BLUF, και φυσική, συνομιλιακή γλώσσα.</p>
+    <div class="meta">
+      <span class="chip">⏱️ ~30 λεπτά</span>
+      <span class="chip">🧪 5 ασκήσεις</span>
+      <span class="chip">✍️ Πρακτική συγγραφή</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: INFORMATION GAIN -->
+  <section class="reveal" id="s1">
+    <div class="sec-head">
+      <span class="sec-kicker">01 · Πυλώνας Α</span>
+      <h2>Κέρδος Πληροφορίας</h2>
+      <p>Η AI έχει ήδη διαβάσει 10.000 γενικά άρθρα. Δεν έχει λόγο να παραθέσει το δικό σου — εκτός αν προσφέρεις κάτι που <em>δεν υπάρχει πουθενά αλλού</em>. Κατάταξε κάθε απόσπασμα: «Ανακυκλωμένο» ή «Κέρδος Πληροφορίας»;</p>
+    </div>
+    <div class="card card-pad">
+      <div class="gain-grid" id="gainGrid"></div>
+      <div class="meter">
+        <div class="meter-bar"><i id="gainFill"></i></div>
+        <div class="meter-lbl" id="gainLbl">Απαντημένα: 0 / 6</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: BLUF SCANNER -->
+  <section class="reveal" id="s2">
+    <div class="sec-head">
+      <span class="sec-kicker">02 · Πυλώνας Β</span>
+      <h2>Ο κανόνας BLUF — το ζουμί στην αρχή</h2>
+      <p>Η AI σαρώνει γρήγορα ψάχνοντας την απάντηση. Αν δεν τη βρει αμέσως, εγκαταλείπει τη σελίδα. Διάλεξε εκδοχή και πάτησε «Σάρωση AI» για να δεις τη διαφορά ζωντανά.</p>
+    </div>
+    <div class="card card-pad">
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div class="seg" id="blufSeg">
+          <span class="thumb" id="blufThumb"></span>
+          <button class="active" data-mode="buried">📜 Θαμμένη απάντηση</button>
+          <button data-mode="bluf">⚡ BLUF</button>
+        </div>
+      </div>
+
+      <div class="article" id="article">
+        <div class="scanline" id="scanline"></div>
+        <!-- paragraphs injected -->
+      </div>
+      <div class="row" style="margin-top:16px"><button class="btn" id="scanBtn">🔎 Σάρωση AI</button></div>
+      <div class="scan-verdict" id="scanVerdict"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: STRUCTURED DATA -->
+  <section class="reveal" id="s3">
+    <div class="sec-head">
+      <span class="sec-kicker">03 · Πυλώνας Β (συνέχεια)</span>
+      <h2>Δομημένα δεδομένα: λίστες &amp; πίνακες</h2>
+      <p>Ίδια πληροφορία, δύο μορφές. Πάτησε «Τι αρπάζει η AI;» και δες πόσο πιο καθαρά εξάγει τα δεδομένα από έναν πίνακα απ' ό,τι από έναν τοίχο κειμένου.</p>
+    </div>
+    <div class="card card-pad">
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div class="seg" id="sdSeg">
+          <span class="thumb" id="sdThumb"></span>
+          <button class="active" data-mode="wall">🧱 Τοίχος κειμένου</button>
+          <button data-mode="table">📊 Πίνακας</button>
+        </div>
+      </div>
+
+      <div id="sdWallView">
+        <div class="sd-wall">Το TopGrip G5 κοστίζει 95€ και έχει φρενάρισμα 9/10· το RoadMax Eco στα 78€ πιάνει 7/10 αλλά διαρκεί περισσότερα χιλιόμετρα· το SilentWay Pro, αν και ακριβό στα 130€, βαθμολογείται 10/10 στην ησυχία ενώ το φρενάρισμα μένει στο 8/10· τέλος το BudgetLine στα 55€ είναι η οικονομική λύση με μέτριο 6/10 σε όλα…</div>
+      </div>
+      <div id="sdTableView" style="display:none">
+        <table class="sd-table" id="sdTable">
+          <thead><tr><th>Ελαστικό</th><th>Τιμή</th><th>Φρενάρισμα</th><th>Ησυχία</th></tr></thead>
+          <tbody>
+            <tr><td>TopGrip G5</td><td>95€</td><td>9/10</td><td>7/10</td></tr>
+            <tr><td>RoadMax Eco</td><td>78€</td><td>7/10</td><td>7/10</td></tr>
+            <tr><td>SilentWay Pro</td><td>130€</td><td>8/10</td><td>10/10</td></tr>
+            <tr><td>BudgetLine</td><td>55€</td><td>6/10</td><td>6/10</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row" style="margin-top:16px"><button class="btn" id="sdBtn">📥 Τι αρπάζει η AI;</button></div>
+
+      <div class="sd-out messy" id="sdOutWall">
+        <h5>⚠️ Από τον τοίχο κειμένου — δύσκολη, επιρρεπής σε λάθη εξαγωγή</h5>
+        <div class="sd-rows" id="sdRowsWall"></div>
+      </div>
+      <div class="sd-out clean" id="sdOutTable">
+        <h5>✅ Από τον πίνακα — καθαρή, άμεση εξαγωγή ανά γραμμή</h5>
+        <div class="sd-rows" id="sdRowsTable"></div>
+      </div>
+    </div>
+
+    <div class="supp" style="margin-top:18px">
+      <span class="tag">＋ Συμπληρωματικό υλικό</span>
+      <h4>Δομημένα δεδομένα &amp; Schema (JSON-LD) το 2026</h4>
+      <p>Πέρα από την <em>ορατή</em> δομή, μπορείς να «εξηγήσεις» το περιεχόμενο και στις μηχανές με <b>schema markup</b> (συνήθως σε μορφή <code>JSON-LD</code>): δηλώνεις ρητά τι είναι τιμή, συγγραφέας, ημερομηνία, ερώτηση/απάντηση. <span>Η Google ανέφερε ότι τα δομημένα δεδομένα βοηθούν την AI να κατανοεί το περιεχόμενο</span>, και τα LLM crawlers (Perplexity, Bing Copilot) τα διαβάζουν.</p>
+      <p class="small">⚠️ Με μέτρο όμως: μελέτες δεν βρήκαν σταθερή συσχέτιση schema → citations. Το schema <b>διευκολύνει</b> την κατανόηση, αλλά δεν αντικαθιστά τη σχετικότητα, την αυθεντία και την καθαρή <em>ορατή</em> δομή. (Σημ.: το «FAQ rich result» της Google αποσύρθηκε, αλλά το markup εξακολουθεί να διαβάζεται από τα AI.)</p>
+    </div>
+  </section>
+
+  <!-- SECTION 4: CONVERSATIONAL QUERIES -->
+  <section class="reveal" id="s4">
+    <div class="sec-head">
+      <span class="sec-kicker">04 · Πυλώνας Γ</span>
+      <h2>Συνομιλιακά ερωτήματα</h2>
+      <p>Οι χρήστες δεν ψάχνουν πια με «σπασμένες λέξεις» — μιλούν στη μηχανή σαν σε φίλο, με σύνθετα ερωτήματα πολλών περιορισμών. Βρες τους <b>5 περιορισμούς</b> στο παρακάτω ερώτημα — κάνε κλικ σε καθένα.</p>
+    </div>
+    <div class="card card-pad">
+      <div class="cq-box" id="cqBox">
+        «Ψάχνω ένα ξενοδοχείο στη <span class="cq" data-k="loc">Σαντορίνη</span> για τον <span class="cq" data-k="date">Αύγουστο</span>, που να <span class="cq" data-k="pet">δέχεται σκύλους</span>, να έχει <span class="cq" data-k="pool">πισίνα</span> και να κοστίζει <span class="cq" data-k="price">κάτω από 150 ευρώ τη βραδιά</span>.»
+      </div>
+      <div class="cq-list" id="cqList">
+        <div class="cq-row" data-k="loc"><span class="dot"></span><span><span class="ck">Τοποθεσία:</span> Σαντορίνη</span></div>
+        <div class="cq-row" data-k="date"><span class="dot"></span><span><span class="ck">Περίοδος:</span> Αύγουστος</span></div>
+        <div class="cq-row" data-k="pet"><span class="dot"></span><span><span class="ck">Παροχή:</span> δέχεται κατοικίδια</span></div>
+        <div class="cq-row" data-k="pool"><span class="dot"></span><span><span class="ck">Παροχή:</span> πισίνα</span></div>
+        <div class="cq-row" data-k="price"><span class="dot"></span><span><span class="ck">Προϋπολογισμός:</span> &lt; 150€ / βραδιά</span></div>
+      </div>
+      <div class="cq-done" id="cqDone">✅ <b>Και τα 5!</b> Για να σε επιλέξει το RAG εδώ, η σελίδα σου πρέπει να απαντά <em>ρητά</em> και στους 5 περιορισμούς, σε φυσική γλώσσα. Μια γενική σελίδα «Ξενοδοχείο στη Σαντορίνη» δεν αρκεί — χρειάζεσαι αναλυτικό περιεχόμενο &amp; FAQ.</div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: FAQ PICKER -->
+  <section class="reveal" id="s5">
+    <div class="sec-head">
+      <span class="sec-kicker">05 · Η τακτική των FAQs</span>
+      <h2>Γράψε ερωτήσεις όπως ρωτάει ο άνθρωπος</h2>
+      <p>Η καλύτερη μέθοδος για συνομιλιακά ερωτήματα: μια ενότητα «Συχνές Ερωτήσεις» γραμμένη <em>όπως μιλάει</em> ο χρήστης. Διάλεξε για κάθε ζευγάρι την καλύτερη διατύπωση FAQ.</p>
+    </div>
+    <div class="card card-pad" id="faqWrap"></div>
+  </section>
+
+  <!-- SECTION 6: FINAL QUIZ -->
+  <section class="reveal" id="s6">
+    <div class="sec-head">
+      <span class="sec-kicker">06 · Έλεγχος γνώσεων</span>
+      <h2>Γρήγορο κουίζ</h2>
+      <p>Πέντε ερωτήσεις για Information Gain, BLUF, δομή και συνομιλιακά ερωτήματα.</p>
+    </div>
+    <div class="card card-pad" id="finalQuiz"></div>
+  </section>
+
+  <!-- COMPLETION -->
+  <section class="reveal">
+    <div class="done" id="doneCard">
+      <div class="mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>Κεφάλαιο 3 ολοκληρώθηκε</h3>
+      <p>Ξέρεις πλέον να γράφεις με Κέρδος Πληροφορίας, δομή BLUF και φυσική γλώσσα.<br>Επόμενο: το Κεφάλαιο 4.</p>
+      <div class="scorepill" id="finalScore">Σκορ κουίζ: —</div>
+    </div>
+  </section>
+
+  <footer>GEO Lab · Κεφάλαιο 3 / 5 — Εργαστηριακό υλικό μαθήματος SEO → GEO</footer>
+</main>
+
+<script>
+/* ===== PROGRESS ===== */
+const totalTasks = 6/*gain*/ + 1/*bluf*/ + 1/*sd*/ + 1/*cq*/ + 3/*faq*/ + 5/*final*/;
+let done=new Set();
+function mark(id){ done.add(id); const pct=Math.min(100,Math.round(done.size/totalTasks*100));
+  document.getElementById('progFill').style.width=pct+'%'; document.getElementById('progNum').textContent=pct+'%'; }
+
+/* ===== SECTION 1: INFORMATION GAIN DETECTOR ===== */
+const gainData=[
+  {t:'«Ο σακχαρώδης διαβήτης είναι μια χρόνια πάθηση που επηρεάζει τα επίπεδα γλυκόζης στο αίμα.»', gain:false, why:'Γενικός ορισμός — υπάρχει σε 10.000 άρθρα. Καμία προστιθέμενη αξία.'},
+  {t:'«Ρωτήσαμε 100 εταιρείες στην Αθήνα: το 60% καταργεί την τηλεργασία το 2026.»', gain:true, why:'Πρωτογενής έρευνα με μοναδικό στατιστικό — η AI θα το παραθέσει με link προς εσένα.'},
+  {t:'«Η τηλεργασία έχει πλεονεκτήματα και μειονεκτήματα για τους εργαζομένους.»', gain:false, why:'Κοινότοπη διαπίστωση χωρίς δεδομένα. Τίποτα νέο για το μοντέλο.'},
+  {t:'«Case study: πώς το café μας αύξησε τις πωλήσεις 23% αλλάζοντας μόνο το μενού.»', gain:true, why:'Πραγματικό case study της επιχείρησής σου — μοναδική εμπειρία που κανείς δεν μπορεί να μαντέψει.'},
+  {t:'«Σύμφωνα με γνωστές πηγές, η άσκηση κάνει καλό στην υγεία.»', gain:false, why:'Αόριστο & ανακυκλωμένο. «Γνωστές πηγές» = καμία πηγή.'},
+  {t:'«Δρ. Παπαδοπούλου: \u201cΣτα 15 χρόνια πρακτικής, το 80% των ασθενών αγνοεί αυτό το σύμπτωμα.\u201d»', gain:true, why:'Απόφθεγμα ειδικού με μοναδική παρατήρηση — προσθέτει αυθεντία & Information Gain.'}
+];
+(function(){
+  const grid=document.getElementById('gainGrid'), fill=document.getElementById('gainFill'), lbl=document.getElementById('gainLbl');
+  let answered=0, correct=0;
+  gainData.forEach((d,i)=>{
+    const el=document.createElement('div'); el.className='gain-item';
+    el.innerHTML=`<div class="stmt">${d.t}</div>
+      <div class="gain-btns">
+        <button data-g="0">♻️ Ανακυκλωμένο</button>
+        <button data-g="1">💎 Κέρδος Πληροφορίας</button>
+      </div><div class="verdict"></div>`;
+    el.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const ok=(btn.dataset.g==='1')===d.gain;
+        el.classList.add(ok?'correct':'wrong');
+        el.querySelector('.verdict').innerHTML=(ok?'✓ ':'✗ ')+d.why;
+        answered++; if(ok)correct++;
+        fill.style.width=Math.round(answered/gainData.length*100)+'%';
+        lbl.textContent=`Απαντημένα: ${answered} / ${gainData.length} · Σωστά: ${correct}`;
+        mark('gain'+i);
+      });
+    });
+    grid.appendChild(el);
+  });
+})();
+
+/* ===== SECTION 2: BLUF SCANNER ===== */
+(function(){
+  const buried=[
+    {txt:'Καλημέρα! Σε αυτό το άρθρο θα μιλήσουμε για πολλά ενδιαφέροντα πράγματα γύρω από τον καφέ…', ad:true},
+    {txt:'Πρώτα όμως, λίγη ιστορία: ο καφές ανακαλύφθηκε πριν αιώνες στην Αιθιοπία…', ad:false},
+    {txt:'Υπάρχουν πολλοί τύποι, ποικιλίες, μέθοδοι… ας τα δούμε ένα-ένα αναλυτικά…', ad:true},
+    {txt:'Τελικά, η ιδανική θερμοκρασία για espresso είναι 90–96°C.', answer:true}
+  ];
+  const bluf=[
+    {txt:'Η ιδανική θερμοκρασία νερού για espresso είναι 90–96°C.', answer:true},
+    {txt:'Παρακάτω αναλύουμε γιατί: πάνω από 96°C καίγεται ο καφές…', ad:false},
+    {txt:'Κάτω από 90°C η εκχύλιση είναι ελλιπής και η γεύση «νερουλή»…', ad:false},
+    {txt:'Tip: προθέρμανε τη μηχανή για σταθερή θερμοκρασία.', ad:false}
+  ];
+  const article=document.getElementById('article'), scanline=document.getElementById('scanline'), verdict=document.getElementById('scanVerdict');
+  const seg=document.getElementById('blufSeg'), thumb=document.getElementById('blufThumb'), btns=seg.querySelectorAll('button');
+  let mode='buried', timers=[];
+  function render(){
+    [...article.querySelectorAll('.para')].forEach(p=>p.remove());
+    verdict.className='scan-verdict'; verdict.innerHTML='';
+    const data=mode==='buried'?buried:bluf;
+    data.forEach(d=>{
+      const p=document.createElement('div'); p.className='para'+(d.answer?' answer':'');
+      p.innerHTML=(d.answer?'<b>'+d.txt+'</b>':d.txt)+(d.ad?'<span class="ad">διαφήμιση</span>':'');
+      article.appendChild(p);
+    });
+  }
+  function place(b){ thumb.style.left=b.offsetLeft+'px'; thumb.style.width=b.offsetWidth+'px'; }
+  btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.toggle('active',x===b)); place(b); mode=b.dataset.mode; clearScan(); render(); }));
+  requestAnimationFrame(()=>{ place(btns[0]); render(); });
+  window.addEventListener('resize',()=>place(seg.querySelector('.active')));
+
+  function clearScan(){ timers.forEach(t=>clearTimeout(t)); timers=[]; scanline.style.opacity='0'; scanline.style.top='0px';
+    [...article.querySelectorAll('.para')].forEach(p=>p.classList.remove('lit','grabbed')); verdict.className='scan-verdict'; }
+  document.getElementById('scanBtn').addEventListener('click',()=>{
+    clearScan();
+    const paras=[...article.querySelectorAll('.para')];
+    scanline.style.opacity='1';
+    const isBluf=mode==='bluf';
+    // BLUF: grabs at para 0 quickly. Buried: scans all, "patience" runs out.
+    const stopIndex = isBluf ? 0 : paras.length; // buried scans through all before finding
+    let i=0;
+    function step(){
+      if(i>0) paras[i-1].classList.remove('lit');
+      if(i<paras.length){
+        const p=paras[i]; p.classList.add('lit');
+        scanline.style.top=(p.offsetTop+p.offsetHeight/2)+'px';
+        if(isBluf && p.classList.contains('answer')){
+          // grab immediately
+          timers.push(setTimeout(()=>{
+            p.classList.remove('lit'); p.classList.add('grabbed'); scanline.style.opacity='0';
+            verdict.className='scan-verdict show ok';
+            verdict.innerHTML='<span>⚡</span><span>Η απάντηση βρέθηκε στην 1η παράγραφο — η AI την «άρπαξε» αμέσως και πιθανότατα θα σε παραθέσει.</span>';
+            mark('bluf');
+          },420));
+          return;
+        }
+        i++;
+        timers.push(setTimeout(step, 620));
+      } else {
+        // buried: reached the end / patience exhausted
+        scanline.style.opacity='0';
+        verdict.className='scan-verdict show bad';
+        verdict.innerHTML='<span>⏱️</span><span>Η AI σάρωσε εισαγωγές & διαφημίσεις χωρίς άμεση απάντηση. Πριν φτάσει βαθιά, θεωρεί τη σελίδα αναποτελεσματική και προτιμά ανταγωνιστή.</span>';
+        mark('bluf');
+      }
+    }
+    step();
+  });
+})();
+
+/* ===== SECTION 3: STRUCTURED DATA GRAB ===== */
+(function(){
+  const seg=document.getElementById('sdSeg'), thumb=document.getElementById('sdThumb'), btns=seg.querySelectorAll('button');
+  const wallView=document.getElementById('sdWallView'), tableView=document.getElementById('sdTableView');
+  const outWall=document.getElementById('sdOutWall'), outTable=document.getElementById('sdOutTable');
+  const rowsWall=document.getElementById('sdRowsWall'), rowsTable=document.getElementById('sdRowsTable');
+  const tableRows=[...document.querySelectorAll('#sdTable tbody tr')];
+  let mode='wall', timers=[];
+  function place(b){ thumb.style.left=b.offsetLeft+'px'; thumb.style.width=b.offsetWidth+'px'; }
+  function reset(){ timers.forEach(t=>clearTimeout(t)); timers=[];
+    outWall.classList.remove('show'); outTable.classList.remove('show'); rowsWall.innerHTML=''; rowsTable.innerHTML='';
+    tableRows.forEach(r=>r.classList.remove('grab')); }
+  btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.toggle('active',x===b)); place(b);
+    mode=b.dataset.mode; reset(); wallView.style.display=mode==='wall'?'block':'none'; tableView.style.display=mode==='table'?'block':'none'; }));
+  requestAnimationFrame(()=>place(btns[0]));
+  window.addEventListener('resize',()=>place(seg.querySelector('.active')));
+
+  const clean=[['TopGrip G5','95€','9/10'],['RoadMax Eco','78€','7/10'],['SilentWay Pro','130€','8/10'],['BudgetLine','55€','6/10']];
+  const messy=['TopGrip G5 → 95€ ; φρενάρισμα 9/10 ✓','RoadMax Eco → 78€ ; «διαρκεί περισσότερο» (πόσο;) ⚠️','SilentWay Pro → 130€ ; ησυχία 10/10, φρενάρισμα 8/10','BudgetLine → ~55€ ; «μέτριο 6/10 σε όλα» (ασαφές) ⚠️'];
+  document.getElementById('sdBtn').addEventListener('click',()=>{
+    reset();
+    if(mode==='table'){
+      outTable.classList.add('show');
+      clean.forEach((c,i)=> timers.push(setTimeout(()=>{
+        tableRows[i].classList.add('grab');
+        const r=document.createElement('div'); r.className='r'; r.innerHTML=`<b>${c[0]}</b> — Τιμή: ${c[1]} · Φρενάρισμα: ${c[2]}`;
+        rowsTable.appendChild(r); requestAnimationFrame(()=>r.classList.add('show'));
+      }, i*350)));
+    } else {
+      outWall.classList.add('show');
+      messy.forEach((m,i)=> timers.push(setTimeout(()=>{
+        const r=document.createElement('div'); r.className='r'; r.textContent=m;
+        rowsWall.appendChild(r); requestAnimationFrame(()=>r.classList.add('show'));
+      }, i*350)));
+    }
+    mark('sd');
+  });
+})();
+
+/* ===== SECTION 4: CONSTRAINT EXTRACTOR ===== */
+(function(){
+  const box=document.getElementById('cqBox'), done_=document.getElementById('cqDone');
+  const rows={}; document.querySelectorAll('.cq-row').forEach(r=>rows[r.dataset.k]=r);
+  const total=Object.keys(rows).length; let found=0;
+  box.querySelectorAll('.cq').forEach(span=>{
+    span.addEventListener('click',()=>{
+      if(span.classList.contains('found')) return;
+      span.classList.add('found');
+      const r=rows[span.dataset.k]; r.classList.add('on'); r.querySelector('.dot').textContent='✓';
+      found++;
+      if(found===total){ done_.classList.add('show'); mark('cq'); }
+    });
+  });
+})();
+
+/* ===== SECTION 5: FAQ PICKER ===== */
+const faqData=[
+  { ctx:'Σελίδα ξενοδοχείου',
+    a:{tg:'Παλιό SEO',txt:'«ξενοδοχείο σαντορίνη σκύλος πισίνα φθηνό»'},
+    b:{tg:'Συνομιλιακό',txt:'«Δέχεστε κατοικίδια και έχετε πισίνα τον Αύγουστο;»'}, right:'b',
+    ex:'Οι χρήστες μιλούν φυσικά στη μηχανή. Η ερώτηση-φράση ταιριάζει σχεδόν αυτούσια με το conversational query.' },
+  { ctx:'Κατάστημα υπολογιστών',
+    a:{tg:'Συνομιλιακό',txt:'«Ποιον φορητό να πάρω για βίντεο επεξεργασία με budget 800€;»'},
+    b:{tg:'Παλιό SEO',txt:'«laptop βίντεο επεξεργασία 800 ευρώ καλύτερο»'}, right:'a',
+    ex:'Η πλήρης, φυσική ερώτηση «πιάνει» το πραγματικό ερώτημα του χρήστη — και την απάντηση μπορεί να την παραθέσει αυτούσια η AI.' },
+  { ctx:'Διατροφολόγος',
+    a:{tg:'Ρηχή απάντηση',txt:'Ε: Πόσο νερό; Α: Αρκετό.'},
+    b:{tg:'Περιεκτική απάντηση',txt:'Ε: Πόσο νερό να πίνω την ημέρα; Α: Περίπου 30 ml ανά κιλό σωματικού βάρους — π.χ. ~2,1 L για 70 κιλά.'}, right:'b',
+    ex:'Σύντομη ΑΛΛΑ περιεκτική & συγκεκριμένη απάντηση. Η AI εξάγει εύκολα ένα καθαρό, αριθμημένο δεδομένο για να το παραθέσει.' }
+];
+(function(){
+  const wrap=document.getElementById('faqWrap');
+  faqData.forEach((f,i)=>{
+    const block=document.createElement('div'); block.style.cssText='padding:18px 0;border-top:1px solid var(--hairline-soft)'; if(i===0)block.style.borderTop='0';
+    block.innerHTML=`<div class="faq-q">Πλαίσιο: ${f.ctx} — ποια διατύπωση FAQ είναι καλύτερη;</div>`;
+    const pair=document.createElement('div'); pair.className='faq-pair';
+    ['a','b'].forEach(key=>{
+      const o=f[key]; const d=document.createElement('div'); d.className='faq-opt';
+      d.innerHTML=`<span class="tg">${o.tg}</span>${o.txt}`;
+      d.addEventListener('click',()=>{
+        if(block.querySelector('.right')||block.querySelector('.wrong')) return;
+        const ok=key===f.right;
+        d.classList.add(ok?'right':'wrong');
+        if(!ok){ [...pair.children].find(c=>c!==d).classList.add('right'); }
+        ex.classList.add('show'); mark('faq'+i);
+      });
+      pair.appendChild(d);
+    });
+    block.appendChild(pair);
+    const ex=document.createElement('div'); ex.className='faq-ex'; ex.innerHTML='💡 '+f.ex; block.appendChild(ex);
+    wrap.appendChild(block);
+  });
+})();
+
+/* ===== SECTION 6: FINAL QUIZ ===== */
+const finalQuestions=[
+  { q:"Τι είναι το «Information Gain» (Κέρδος Πληροφορίας);",
+    opts:["Πόσες λέξεις-κλειδιά έχει το κείμενο","Μοναδικά δεδομένα που δεν υπάρχουν πουθενά αλλού","Ο αριθμός των εικόνων","Η ταχύτητα φόρτωσης"], a:1,
+    ex:"Η AI ψάχνει ενεργά κάτι νέο — πρωτογενή έρευνα, case studies, αποφθέγματα ειδικών — για να έχει λόγο να σε παραθέσει." },
+  { q:"Τι ορίζει ο κανόνας BLUF (Bottom Line Up Front);",
+    opts:["Κρύψε την απάντηση στο τέλος","Δώσε την άμεση απάντηση στην πρώτη παράγραφο","Βάλε πολλές διαφημίσεις πρώτα","Γράψε μεγάλη εισαγωγή"], a:1,
+    ex:"Το «ζουμί» μπαίνει στην αρχή. Η AI σαρώνει γρήγορα· αν δεν βρει αμέσως απάντηση, εγκαταλείπει τη σελίδα." },
+  { q:"Γιατί η AI προτιμά πίνακες και λίστες;",
+    opts:["Είναι πιο όμορφα","«Αρπάζει» εύκολα τα δομημένα δεδομένα για τη δική της απάντηση","Φορτώνουν γρήγορα","Πιάνουν λιγότερο χώρο"], a:1,
+    ex:"Τα structured data εξάγονται καθαρά και με λιγότερα λάθη απ' ό,τι ένας τοίχος κειμένου." },
+  { q:"Τι είναι ένα «Conversational Query»;",
+    opts:["Μια σπασμένη φράση 2-3 λέξεων","Ένα σύνθετο, φυσικό ερώτημα πολλαπλών περιορισμών","Ένα ερώτημα μόνο για εικόνες","Μια διαφήμιση"], a:1,
+    ex:"Οι χρήστες μιλούν στη μηχανή σαν σε φίλο — π.χ. «ξενοδοχείο στη Σαντορίνη, με πισίνα, που δέχεται σκύλους, κάτω από 150€»." },
+  { q:"Ποια είναι η καλύτερη τακτική για να σε επιλέγει η AI σε συνομιλιακά ερωτήματα;",
+    opts:["Keyword stuffing","Ενότητα FAQ με ερωτήσεις όπως τις λέει ο άνθρωπος + περιεκτικές απαντήσεις","Περισσότερες διαφημίσεις","Να κρύβεις την απάντηση"], a:1,
+    ex:"Το FAQ σε φυσική γλώσσα ταιριάζει με το πραγματικό ερώτημα — η AI «διαβάζει» την απάντησή σου και την παρουσιάζει." }
+];
+(function(){
+  const c=document.getElementById('finalQuiz');
+  finalQuestions.forEach((qd,qi)=>{
+    const q=document.createElement('div'); q.className='q';
+    q.innerHTML=`<div class="qn">ΕΡΩΤΗΣΗ ${qi+1}</div><div class="qt">${qd.q}</div>`;
+    const opts=document.createElement('div'); opts.className='opts';
+    qd.opts.forEach((o,oi)=>{
+      const b=document.createElement('button'); b.className='opt'; b.innerHTML=`<span class="mk"></span><span>${o}</span>`;
+      b.addEventListener('click',()=>{
+        const all=opts.querySelectorAll('.opt'); all.forEach(x=>x.classList.add('locked'));
+        const correct=oi===qd.a; b.classList.remove('locked'); b.classList.add(correct?'correct':'wrong');
+        if(!correct){ all[qd.a].classList.remove('locked'); all[qd.a].classList.add('correct'); }
+        q.querySelector('.explain').classList.add('show'); mark('fin'+qi);
+        if(correct) finalCorrect++; updateScore();
+      });
+      opts.appendChild(b);
+    });
+    q.appendChild(opts);
+    const ex=document.createElement('div'); ex.className='explain'; ex.innerHTML=`💡 ${qd.ex}`; q.appendChild(ex);
+    c.appendChild(q);
+  });
+})();
+let finalCorrect=0;
+function updateScore(){ document.getElementById('finalScore').textContent=`Σκορ κουίζ: ${finalCorrect} / ${finalQuestions.length}`; }
+
+/* ===== SCROLL REVEAL ===== */
+const io=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
