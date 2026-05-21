@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEO Lab · Κεφάλαιο 4 — Η Κυριαρχία του E-E-A-T στην Εποχή της AI</title>
+<style>
+  /* ============ DESIGN TOKENS (shared system · "trust" teal/gold accent) ============ */
+  :root{
+    --bg:#f5f5f7; --bg-elev:#fff; --ink:#1d1d1f; --ink-2:#424245; --ink-3:#6e6e73;
+    --hairline:#d2d2d7; --hairline-soft:#e8e8ed;
+    --accent:#0e7c86; --accent-press:#0a626a; --accent2:#d99000;
+    --blue:#0071e3; --green:#34c759; --green-deep:#248a3d; --red:#ff3b30; --purple:#5e5ce6; --teal:#30b0c7; --gold:#d99000;
+    /* pillar colors */
+    --p-exp:#0e7c86; --p-spec:#3a6df0; --p-auth:#d99000; --p-trust:#2aa367;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+    --shadow-md:0 4px 16px rgba(0,0,0,.08);
+    --shadow-lg:0 18px 50px rgba(0,0,0,.12);
+    --radius:22px; --radius-sm:14px;
+    --ease:cubic-bezier(.25,.1,.25,1); --spring:cubic-bezier(.34,1.56,.64,1);
+    --maxw:940px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  body{ font-family:var(--font); background:var(--bg); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden; }
+  body::before{ content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(900px 600px at 12% -8%, rgba(14,124,134,.10), transparent 60%),
+      radial-gradient(800px 600px at 100% 0%, rgba(217,144,0,.08), transparent 55%),
+      radial-gradient(700px 700px at 50% 120%, rgba(58,109,240,.06), transparent 60%); }
+  ::selection{ background:rgba(14,124,134,.18); }
+
+  /* ============ NAV ============ */
+  .nav{ position:sticky; top:0; z-index:100; backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); background:rgba(245,245,247,.72); border-bottom:1px solid var(--hairline-soft); }
+  .nav-in{ max-width:var(--maxw); margin:0 auto; padding:11px 22px; display:flex; align-items:center; gap:14px; }
+  .nav .badge{ font-size:12px; font-weight:600; letter-spacing:.02em; color:var(--accent); background:rgba(14,124,134,.10); padding:5px 11px; border-radius:980px; white-space:nowrap; }
+  .nav .title{ font-size:15px; font-weight:600; letter-spacing:-.01em; }
+  .nav .title span{ color:var(--ink-3); font-weight:500; }
+  .nav .prog{ margin-left:auto; display:flex; align-items:center; gap:10px; }
+  .prog-track{ width:120px; height:6px; border-radius:980px; background:var(--hairline-soft); overflow:hidden; }
+  .prog-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:980px; transition:width .6s var(--ease); }
+  .prog-num{ font-size:12px; font-weight:600; color:var(--ink-3); font-variant-numeric:tabular-nums; min-width:34px; text-align:right; }
+  @media(max-width:560px){ .prog-track{ width:64px; } .nav .title{ display:none; } }
+
+  /* ============ LAYOUT ============ */
+  main{ max-width:var(--maxw); margin:0 auto; padding:0 22px 120px; }
+  section{ margin-top:84px; }
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s var(--ease),transform .7s var(--ease); }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ============ HERO ============ */
+  .hero{ padding:78px 0 8px; text-align:center; }
+  .eyebrow{ display:inline-block; font-size:13px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+  .hero h1{ font-size:clamp(34px,6.4vw,60px); font-weight:700; letter-spacing:-.025em; line-height:1.04; margin-bottom:20px; background:linear-gradient(180deg,#1d1d1f 0%,#41414a 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p{ font-size:clamp(17px,2.4vw,21px); color:var(--ink-2); max-width:650px; margin:0 auto; letter-spacing:-.01em; }
+  .hero .meta{ margin-top:26px; display:inline-flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .chip{ font-size:13px; font-weight:500; color:var(--ink-2); background:var(--bg-elev); border:1px solid var(--hairline); padding:7px 14px; border-radius:980px; box-shadow:var(--shadow-sm); }
+
+  /* ============ SECTION HEADINGS ============ */
+  .sec-head{ margin-bottom:26px; }
+  .sec-kicker{ font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:10px; }
+  .sec-head h2{ font-size:clamp(26px,4vw,38px); font-weight:700; letter-spacing:-.02em; line-height:1.1; }
+  .sec-head p{ margin-top:12px; font-size:17px; color:var(--ink-2); max-width:680px; letter-spacing:-.01em; }
+
+  /* ============ CARDS ============ */
+  .card{ background:var(--bg-elev); border-radius:var(--radius); box-shadow:var(--shadow-md); border:1px solid rgba(255,255,255,.6); overflow:hidden; }
+  .card-pad{ padding:30px; }
+  @media(max-width:560px){ .card-pad{ padding:22px; } }
+
+  /* ============ PILLAR EXPLORER ============ */
+  .pillars{ display:grid; grid-template-columns:repeat(4,1fr); gap:13px; }
+  @media(max-width:720px){ .pillars{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:420px){ .pillars{ grid-template-columns:1fr; } }
+  .pillar{ cursor:pointer; border:1px solid var(--hairline); border-radius:var(--radius-sm); padding:18px; background:#fff; transition:all .3s var(--ease); position:relative; overflow:hidden; }
+  .pillar:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+  .pillar::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--pc); }
+  .pillar .pl{ font-size:34px; font-weight:800; line-height:1; color:var(--pc); letter-spacing:-.04em; }
+  .pillar h4{ font-size:15px; font-weight:700; margin:10px 0 4px; letter-spacing:-.01em; }
+  .pillar .en{ font-size:11.5px; color:var(--ink-3); font-weight:600; letter-spacing:.02em; }
+  .pillar .det{ font-size:13px; color:var(--ink-2); line-height:1.5; margin-top:11px; max-height:0; opacity:0; overflow:hidden; transition:max-height .45s var(--ease),opacity .35s var(--ease),margin .3s var(--ease); }
+  .pillar.open .det{ max-height:220px; opacity:1; }
+  .pillar .tap{ font-size:11px; color:var(--pc); font-weight:600; margin-top:9px; }
+  .pillar.open .tap{ display:none; }
+
+  /* ============ CLASSIFY EXERCISE ============ */
+  .cls-grid{ display:grid; gap:12px; }
+  .cls-item{ background:#fff; border:1px solid var(--hairline); border-radius:var(--radius-sm); padding:16px 18px; transition:all .35s var(--ease); }
+  .cls-item .stmt{ font-size:14.5px; color:var(--ink); line-height:1.5; letter-spacing:-.01em; }
+  .cls-btns{ display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-top:13px; }
+  @media(max-width:560px){ .cls-btns{ grid-template-columns:repeat(2,1fr); } }
+  .cls-btns button{ appearance:none; cursor:pointer; font-family:inherit; font-size:12.5px; font-weight:600; border:1px solid var(--hairline); background:#fff; color:var(--ink-2); padding:9px 6px; border-radius:10px; transition:all .2s var(--ease); }
+  .cls-btns button[data-p="exp"]:hover{ border-color:var(--p-exp); color:var(--p-exp); }
+  .cls-btns button[data-p="spec"]:hover{ border-color:var(--p-spec); color:var(--p-spec); }
+  .cls-btns button[data-p="auth"]:hover{ border-color:var(--p-auth); color:var(--p-auth); }
+  .cls-btns button[data-p="trust"]:hover{ border-color:var(--p-trust); color:var(--p-trust); }
+  .cls-btns button:active{ transform:scale(.96); }
+  .cls-item.correct{ border-color:var(--green); background:linear-gradient(180deg,#f1fbf3,#fff); }
+  .cls-item.wrong{ border-color:var(--red); background:linear-gradient(180deg,#fff3f2,#fff); }
+  .cls-item .verdict{ font-size:13px; font-weight:600; margin-top:11px; display:none; }
+  .cls-item.correct .verdict,.cls-item.wrong .verdict{ display:block; }
+  .cls-item.correct .verdict{ color:var(--green-deep); } .cls-item.wrong .verdict{ color:var(--red); }
+  .cls-item.correct .cls-btns,.cls-item.wrong .cls-btns{ opacity:.5; pointer-events:none; }
+  .meter{ margin-top:16px; }
+  .meter-bar{ height:8px; border-radius:980px; background:var(--hairline-soft); overflow:hidden; }
+  .meter-bar i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .5s var(--ease); }
+  .meter-lbl{ font-size:13px; color:var(--ink-3); margin-top:9px; }
+
+  /* ============ AUTHOR BUILDER ============ */
+  .ab-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+  @media(max-width:760px){ .ab-grid{ grid-template-columns:1fr; } }
+  .ab-toggles{ display:grid; gap:9px; }
+  .tg{ display:flex; align-items:center; gap:12px; cursor:pointer; background:#fff; border:1px solid var(--hairline); border-radius:13px; padding:13px 15px; transition:all .2s var(--ease); user-select:none; }
+  .tg:hover{ border-color:var(--accent); }
+  .tg.on{ border-color:var(--accent); background:linear-gradient(90deg,rgba(14,124,134,.07),#fff); }
+  .tg .sw{ width:42px; height:25px; border-radius:980px; background:var(--hairline); position:relative; flex:0 0 auto; transition:background .25s var(--ease); }
+  .tg .sw::after{ content:""; position:absolute; top:2px; left:2px; width:21px; height:21px; border-radius:50%; background:#fff; box-shadow:var(--shadow-sm); transition:transform .28s var(--spring); }
+  .tg.on .sw{ background:var(--accent); } .tg.on .sw::after{ transform:translateX(17px); }
+  .tg .tl{ font-size:14px; font-weight:600; } .tg .ts{ font-size:11.5px; color:var(--ink-3); }
+  .ab-panel{ background:linear-gradient(180deg,#fafdfd,#fff); border:1px solid var(--hairline-soft); border-radius:var(--radius-sm); padding:20px; position:sticky; top:70px; }
+  .ab-score{ text-align:center; }
+  .ab-ring{ width:130px; height:130px; margin:0 auto 10px; }
+  .ab-status{ font-size:16px; font-weight:700; letter-spacing:-.01em; transition:color .3s var(--ease); }
+  .ab-sub{ font-size:12.5px; color:var(--ink-3); margin-top:3px; }
+  .xref{ margin-top:16px; border-top:1px solid var(--hairline-soft); padding-top:14px; }
+  .xref-t{ font-size:12px; font-weight:700; color:var(--ink-3); letter-spacing:.03em; text-transform:uppercase; margin-bottom:10px; }
+  .xref-row{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-3); margin:7px 0; transition:color .3s var(--ease); }
+  .xref-row .x{ width:18px; height:18px; border-radius:50%; border:1.5px solid var(--hairline); display:grid; place-items:center; font-size:11px; flex:0 0 auto; transition:all .3s var(--spring); }
+  .xref-row.found{ color:var(--ink); } .xref-row.found .x{ border-color:var(--green); background:var(--green); color:#fff; }
+  .xref-row.miss .x{ border-color:var(--red); color:var(--red); }
+  .xref-row.miss{ color:var(--red); }
+
+  /* ============ EXTERNAL VERIFICATION ============ */
+  .claim-box{ background:#fff; border:1px solid var(--hairline); border-radius:var(--radius-sm); padding:18px; display:flex; gap:13px; align-items:center; }
+  .claim-box .biz{ width:46px; height:46px; border-radius:12px; background:linear-gradient(135deg,var(--accent),var(--accent2)); flex:0 0 auto; display:grid; place-items:center; color:#fff; font-weight:800; font-size:20px; }
+  .claim-box .ct{ font-size:15px; font-weight:700; } .claim-box .cs{ font-size:13px; color:var(--ink-2); }
+  .reviews{ margin-top:16px; display:none; }
+  .reviews.show{ display:block; animation:fade .45s var(--ease); }
+  @keyframes fade{ from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+  .rv-head{ display:flex; align-items:center; gap:10px; font-size:13px; color:var(--ink-3); margin-bottom:11px; }
+  .rv-score{ font-weight:800; font-size:18px; }
+  .rv{ background:#fff; border:1px solid var(--hairline-soft); border-radius:12px; padding:12px 14px; margin:8px 0; font-size:13.5px; display:flex; gap:10px; align-items:flex-start; opacity:0; transform:translateX(-6px); transition:all .35s var(--ease); }
+  .rv.show{ opacity:1; transform:none; }
+  .rv .sent{ font-weight:800; flex:0 0 auto; }
+  .rv.pos .sent{ color:var(--green-deep); } .rv.neg .sent{ color:var(--red); }
+  .verdict-box{ margin-top:16px; border-radius:14px; padding:16px 18px; font-size:14px; font-weight:600; display:none; align-items:flex-start; gap:11px; }
+  .verdict-box.show{ display:flex; animation:fade .45s var(--ease); }
+  .verdict-box.ok{ background:linear-gradient(90deg,#f1fbf3,#fff); border:1px solid var(--green); color:var(--green-deep); }
+  .verdict-box.bad{ background:linear-gradient(90deg,#fff3f2,#fff); border:1px solid var(--red); color:#b3261e; }
+
+  /* ============ QUIZ ============ */
+  .q{ padding:22px 0; border-top:1px solid var(--hairline-soft); }
+  .q:first-child{ border-top:0; padding-top:4px; }
+  .q .qn{ font-size:12px; font-weight:700; color:var(--ink-3); letter-spacing:.03em; }
+  .q .qt{ font-size:17px; font-weight:600; letter-spacing:-.01em; margin:6px 0 15px; }
+  .opts{ display:grid; gap:9px; }
+  .opt{ display:flex; align-items:center; gap:12px; cursor:pointer; background:#fff; border:1px solid var(--hairline); border-radius:13px; padding:14px 16px; font-size:15px; color:var(--ink); transition:all .2s var(--ease); text-align:left; font-family:inherit; width:100%; }
+  .opt:hover{ border-color:var(--accent); transform:translateX(2px); }
+  .opt .mk{ width:22px; height:22px; border-radius:50%; border:2px solid var(--hairline); flex:0 0 auto; display:grid; place-items:center; transition:all .2s var(--ease); }
+  .opt.correct{ border-color:var(--green); background:linear-gradient(90deg,#f1fbf3,#fff); pointer-events:none; }
+  .opt.correct .mk{ border-color:var(--green); background:var(--green); }
+  .opt.wrong{ border-color:var(--red); background:linear-gradient(90deg,#fff3f2,#fff); }
+  .opt.wrong .mk{ border-color:var(--red); background:var(--red); }
+  .opt.locked{ pointer-events:none; opacity:.55; }
+  .q .explain{ margin-top:13px; font-size:14px; color:var(--ink-2); background:var(--hairline-soft); border-radius:12px; padding:13px 15px; display:none; }
+  .q .explain.show{ display:block; animation:fade .4s var(--ease); }
+
+  /* ============ BTN / SUPP / MISC ============ */
+  .btn{ appearance:none; cursor:pointer; font-family:inherit; font-size:15px; font-weight:600; background:var(--accent); color:#fff; border:0; border-radius:980px; padding:13px 24px; transition:transform .15s var(--ease),background .2s var(--ease); white-space:nowrap; }
+  .btn:hover{ background:var(--accent-press); } .btn:active{ transform:scale(.96); }
+  .btn.ghost{ background:var(--hairline-soft); color:var(--ink); } .btn.ghost:hover{ background:var(--hairline); }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .seg{ display:inline-flex; background:var(--hairline-soft); border-radius:13px; padding:3px; position:relative; }
+  .seg button{ appearance:none; border:0; background:transparent; cursor:pointer; font-family:inherit; font-size:14px; font-weight:600; color:var(--ink-2); padding:9px 16px; border-radius:10px; position:relative; z-index:2; transition:color .3s var(--ease); }
+  .seg button.active{ color:var(--ink); }
+  .seg .thumb{ position:absolute; top:3px; bottom:3px; border-radius:10px; background:var(--bg-elev); box-shadow:var(--shadow-sm); transition:all .38s var(--spring); z-index:1; }
+  .supp{ background:linear-gradient(180deg,#f5fbfb,#fff); border:1px dashed var(--accent); border-radius:var(--radius-sm); padding:20px 22px; }
+  .supp .tag{ display:inline-flex; align-items:center; gap:7px; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); margin-bottom:11px; }
+  .supp h4{ font-size:16px; font-weight:700; letter-spacing:-.01em; margin-bottom:6px; }
+  .supp p{ font-size:14.5px; color:var(--ink-2); line-height:1.55; }
+  .supp p+p{ margin-top:9px; }
+  .supp .small{ font-size:12.5px; color:var(--ink-3); margin-top:10px; }
+  .hint{ font-size:13px; color:var(--ink-3); margin-top:12px; }
+
+  .done{ text-align:center; padding:46px 24px; border-radius:var(--radius); background:linear-gradient(180deg,#ecf8f9,#fff); border:1px solid #c4e9ec; }
+  .done .mark{ width:72px; height:72px; border-radius:50%; margin:0 auto 18px; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent),var(--accent2)); box-shadow:0 12px 30px rgba(14,124,134,.3); transform:scale(0); transition:transform .6s var(--spring); }
+  .done.in .mark{ transform:scale(1); }
+  .done h3{ font-size:26px; font-weight:700; letter-spacing:-.02em; }
+  .done p{ font-size:16px; color:var(--ink-2); margin-top:10px; }
+  .scorepill{ display:inline-block; margin-top:18px; font-size:15px; font-weight:700; color:var(--accent); background:rgba(14,124,134,.1); padding:9px 18px; border-radius:980px; }
+  footer{ text-align:center; margin-top:80px; font-size:13px; color:var(--ink-3); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <span class="badge">GEO Lab</span>
+    <span class="title">Κεφάλαιο 4 · <span>Η Κυριαρχία του E-E-A-T</span></span>
+    <div class="prog"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span class="prog-num" id="progNum">0%</span></div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <header class="hero reveal">
+    <span class="eyebrow">Εργαστήριο · Κεφάλαιο 4 από 5</span>
+    <h1>Ποιον εμπιστεύεται<br>η Τεχνητή Νοημοσύνη;</h1>
+    <p>Στην έκρηξη του AI-spam, η AI πρέπει να είναι σίγουρη ότι οι πηγές της είναι έγκυρες. Στο GEO, η <b>απόδειξη της αυθεντίας</b> είναι συχνά πιο σημαντική από το ίδιο το κείμενο.</p>
+    <div class="meta">
+      <span class="chip">⏱️ ~30 λεπτά</span>
+      <span class="chip">🧪 4 ασκήσεις</span>
+      <span class="chip">🛡️ E-E-A-T στην πράξη</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: PILLARS -->
+  <section class="reveal" id="s1">
+    <div class="sec-head">
+      <span class="sec-kicker">01 · Τα 4 θεμέλια</span>
+      <h2>Τι σημαίνει E-E-A-T;</h2>
+      <p>Τέσσερις παράμετροι με τις οποίες Google &amp; LLMs αξιολογούν κάθε πληροφοριακό κόμβο. Πάτησε κάθε πυλώνα για λεπτομέρειες.</p>
+    </div>
+    <div class="card card-pad">
+      <div class="pillars" id="pillars"></div>
+      <div class="hint">💡 Το διπλό «E» (Experience + Expertise) προστέθηκε ώστε η AI να ξεχωρίζει το <em>«το έζησα»</em> από το <em>«το ξέρω θεωρητικά»</em>.</div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: CLASSIFY -->
+  <section class="reveal" id="s2">
+    <div class="sec-head">
+      <span class="sec-kicker">02 · Άσκηση αναγνώρισης</span>
+      <h2>Σε ποιον πυλώνα ανήκει το σήμα;</h2>
+      <p>Διάβασε κάθε σήμα αυθεντίας και κατάταξέ το στον σωστό πυλώνα του E-E-A-T.</p>
+    </div>
+    <div class="card card-pad">
+      <div class="cls-grid" id="clsGrid"></div>
+      <div class="meter">
+        <div class="meter-bar"><i id="clsFill"></i></div>
+        <div class="meter-lbl" id="clsLbl">Απαντημένα: 0 / 8</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: AUTHOR BUILDER -->
+  <section class="reveal" id="s3">
+    <div class="sec-head">
+      <span class="sec-kicker">03 · Author Entities</span>
+      <h2>Χτίσε μια ψηφιακή οντότητα συγγραφέα</h2>
+      <p>Τα ανώνυμα άρθρα απορρίπτονται μαζικά. Πρόσθεσε στοιχεία στο προφίλ του συγγραφέα και δες πώς ο αλγόριθμος εκτελεί <b>διασταύρωση (cross-referencing)</b> και χτίζεται η αυθεντία.</p>
+    </div>
+    <div class="card card-pad">
+      <div class="ab-grid">
+        <div class="ab-toggles" id="abToggles"></div>
+        <div class="ab-panel">
+          <div class="ab-score">
+            <svg class="ab-ring" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#e8e8ed" stroke-width="11"/>
+              <circle id="abArc" cx="60" cy="60" r="52" fill="none" stroke="url(#abg)" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .6s var(--ease)"/>
+              <text id="abPct" x="60" y="67" text-anchor="middle" font-size="26" font-weight="800" fill="#1d1d1f" font-family="-apple-system,sans-serif">0</text>
+              <defs><linearGradient id="abg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7c86"/><stop offset="1" stop-color="#d99000"/></linearGradient></defs>
+            </svg>
+            <div class="ab-status" id="abStatus">Ανώνυμο άρθρο</div>
+            <div class="ab-sub" id="abSub">Καμία οντότητα για την AI να επαληθεύσει.</div>
+          </div>
+          <div class="xref">
+            <div class="xref-t">🔍 Διασταύρωση δεδομένων</div>
+            <div class="xref-row" id="xrName"><span class="x"></span><span>Ταυτότητα συγγραφέα</span></div>
+            <div class="xref-row" id="xrLink"><span class="x"></span><span>Επαγγελματικό προφίλ (LinkedIn)</span></div>
+            <div class="xref-row" id="xrPub"><span class="x"></span><span>Δημοσιεύσεις / βιβλία / bylines</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: EXTERNAL VERIFICATION -->
+  <section class="reveal" id="s4">
+    <div class="sec-head">
+      <span class="sec-kicker">04 · Εξωτερική επαλήθευση</span>
+      <h2>Η AI δεν σε πιστεύει στα λόγια</h2>
+      <p>Το σύστημα δεν αρκείται στο τι λες για τον εαυτό σου. Εκτελεί <b>ανάλυση συναισθήματος (Sentiment Analysis)</b> σε κριτικές τρίτων. Διάλεξε επιχείρηση και πάτησε «Έλεγχος».</p>
+    </div>
+    <div class="card card-pad">
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div class="seg" id="evSeg">
+          <span class="thumb" id="evThumb"></span>
+          <button class="active" data-mode="a">🅰️ TechFix</button>
+          <button data-mode="b">🅱️ QuickRepair</button>
+        </div>
+      </div>
+      <div class="claim-box">
+        <div class="biz" id="evLogo">T</div>
+        <div><div class="ct" id="evName">TechFix</div><div class="cs">Ισχυρισμός στο site: <em>«Προσφέρουμε κορυφαίες υπηρεσίες επισκευής, οι πελάτες μας λατρεύουν!»</em></div></div>
+      </div>
+      <div class="row" style="margin-top:16px"><button class="btn" id="evBtn">🔎 Έλεγχος εξωτερικών πηγών</button></div>
+      <div class="reviews" id="evReviews">
+        <div class="rv-head">Trustpilot · Google My Business · forums →<span class="rv-score" id="evScore"></span></div>
+        <div id="evList"></div>
+      </div>
+      <div class="verdict-box" id="evVerdict"></div>
+    </div>
+
+    <div class="supp" style="margin-top:18px">
+      <span class="tag">＋ Συμπληρωματικό υλικό</span>
+      <h4>Brand Mentions &gt; Backlinks · και το YMYL</h4>
+      <p>Στο παλιό SEO χρειαζόσουν ενεργό <em>σύνδεσμο</em> (backlink). Στο GEO, ακόμη και η <b>απλή αναφορά του ονόματός σου</b> (brand mention) σε αναγνωρισμένο μέσο χτίζει Κύρος — το μοντέλο «βλέπει» τη συσχέτιση χωρίς να χρειάζεται link.</p>
+      <p>Το E-E-A-T βαραίνει <b>πολλαπλάσια</b> σε θέματα <b>YMYL</b> (<em>Your Money or Your Life</em>): υγεία, οικονομικά, νομικά, ασφάλεια. Εκεί μια λάθος απάντηση μπορεί να βλάψει — οπότε η AI απαιτεί τη μέγιστη απόδειξη αυθεντίας πριν σε επιλέξει ως πηγή.</p>
+      <p class="small">💡 Διδακτικό σημείο: για ένα blog μαγειρικής το «λάθος» κοστίζει λίγο· για έναν ιατρικό ή φοροτεχνικό κόμβο, το κατώφλι αυθεντίας εκτοξεύεται.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 5: FINAL QUIZ -->
+  <section class="reveal" id="s5">
+    <div class="sec-head">
+      <span class="sec-kicker">05 · Έλεγχος γνώσεων</span>
+      <h2>Γρήγορο κουίζ</h2>
+      <p>Πέντε ερωτήσεις για E-E-A-T, ταυτότητα συγγραφέα και εξωτερική επαλήθευση.</p>
+    </div>
+    <div class="card card-pad" id="finalQuiz"></div>
+  </section>
+
+  <!-- COMPLETION -->
+  <section class="reveal">
+    <div class="done" id="doneCard">
+      <div class="mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>Κεφάλαιο 4 ολοκληρώθηκε</h3>
+      <p>Ξέρεις πλέον πώς η AI αξιολογεί αυθεντία, επαληθεύει συγγραφείς και ελέγχει τη φήμη σου.<br>Επόμενο: το τελευταίο Κεφάλαιο 5.</p>
+      <div class="scorepill" id="finalScore">Σκορ κουίζ: —</div>
+    </div>
+  </section>
+
+  <footer>GEO Lab · Κεφάλαιο 4 / 5 — Εργαστηριακό υλικό μαθήματος SEO → GEO</footer>
+</main>
+
+<script>
+/* ===== PROGRESS ===== */
+const totalTasks = 8/*classify*/ + 1/*author*/ + 1/*verify*/ + 5/*final*/;
+let done=new Set();
+function mark(id){ done.add(id); const pct=Math.min(100,Math.round(done.size/totalTasks*100));
+  document.getElementById('progFill').style.width=pct+'%'; document.getElementById('progNum').textContent=pct+'%'; }
+
+/* ===== SECTION 1: PILLAR EXPLORER ===== */
+const pillarData=[
+  {l:'E',k:'exp',name:'Εμπειρία',en:'Experience',c:'var(--p-exp)',det:'Αποδείξεις βιωματικής επαφής: πρώτο πρόσωπο, αυθεντικές φωτογραφίες από την πραγματική χρήση. «Το δοκίμασα ο ίδιος» έναντι θεωρητικών κειμένων.'},
+  {l:'E',k:'spec',name:'Εξειδίκευση',en:'Expertise',c:'var(--p-spec)',det:'Τυπική κατάρτιση & γνώση. Άρθρο για νομικά → υπογραφή δικηγόρου. Τα συστήματα σαρώνουν για τίτλους σπουδών & επαγγελματική πορεία.'},
+  {l:'A',k:'auth',name:'Κύρος',en:'Authoritativeness',c:'var(--p-auth)',det:'Αναγνώριση από τον κλάδο. Χτίζεται όταν άλλες έγκυρες πηγές αναφέρουν το όνομά σου ως σημείο αναφοράς σε μια θεματολογία.'},
+  {l:'T',k:'trust',name:'Αξιοπιστία',en:'Trustworthiness',c:'var(--p-trust)',det:'Η βάση όλων. Τεχνικά (HTTPS) & διαφάνεια: σαφείς όροι χρήσης, πολιτική απορρήτου, πραγματικά στοιχεία επικοινωνίας.'}
+];
+(function(){
+  const wrap=document.getElementById('pillars');
+  pillarData.forEach(p=>{
+    const el=document.createElement('div'); el.className='pillar'; el.style.setProperty('--pc',p.c);
+    el.innerHTML=`<div class="pl">${p.l}</div><h4>${p.name}</h4><div class="en">${p.en}</div><div class="det">${p.det}</div><div class="tap">Πάτησε για λεπτομέρειες ↓</div>`;
+    el.addEventListener('click',()=>el.classList.toggle('open'));
+    wrap.appendChild(el);
+  });
+})();
+
+/* ===== SECTION 2: CLASSIFY ===== */
+const clsData=[
+  {t:'«Δοκίμασα ο ίδιος αυτό το ρομπότ-σκούπα για 3 μήνes» + αυθεντικές φωτογραφίες χρήσης.', p:'exp'},
+  {t:'Ταξιδιωτικό άρθρο: «Έζησα έναν ολόκληρο χρόνο στο Τόκιο και να τι έμαθα…»', p:'exp'},
+  {t:'Το ιατρικό άρθρο υπογράφεται από καρδιολόγο με πτυχίο Ιατρικής & ειδικότητα.', p:'spec'},
+  {t:'Σελίδα συγγραφέα με πιστοποιήσεις και 12 χρόνια επαγγελματικής πορείας στον τομέα.', p:'spec'},
+  {t:'Δύο μεγάλα sites του κλάδου αναφέρουν το όνομά σου ως σημείο αναφοράς για το θέμα.', p:'auth'},
+  {t:'Η μάρκα σου αναφέρεται σε γνωστό ειδησεογραφικό μέσο (χωρίς καν link).', p:'auth'},
+  {t:'Ασφαλές HTTPS, ξεκάθαρη πολιτική απορρήτου και πραγματικά στοιχεία επικοινωνίας.', p:'trust'},
+  {t:'Σταθερά θετικές, ανεξάρτητες κριτικές σε Trustpilot & Google My Business.', p:'trust'}
+];
+const pLabels={exp:'Εμπειρία',spec:'Εξειδίκευση',auth:'Κύρος',trust:'Αξιοπιστία'};
+(function(){
+  const grid=document.getElementById('clsGrid'), fill=document.getElementById('clsFill'), lbl=document.getElementById('clsLbl');
+  let answered=0, correct=0;
+  clsData.forEach((d,i)=>{
+    const el=document.createElement('div'); el.className='cls-item';
+    el.innerHTML=`<div class="stmt">${d.t}</div>
+      <div class="cls-btns">
+        <button data-p="exp">Εμπειρία</button>
+        <button data-p="spec">Εξειδίκευση</button>
+        <button data-p="auth">Κύρος</button>
+        <button data-p="trust">Αξιοπιστία</button>
+      </div><div class="verdict"></div>`;
+    el.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const ok=btn.dataset.p===d.p;
+        el.classList.add(ok?'correct':'wrong');
+        el.querySelector('.verdict').innerHTML= ok?('✓ Σωστά — '+pLabels[d.p]):('✗ Ανήκει στον πυλώνα: '+pLabels[d.p]);
+        answered++; if(ok)correct++;
+        fill.style.width=Math.round(answered/clsData.length*100)+'%';
+        lbl.textContent=`Απαντημένα: ${answered} / ${clsData.length} · Σωστά: ${correct}`;
+        mark('cls'+i);
+      });
+    });
+    grid.appendChild(el);
+  });
+})();
+
+/* ===== SECTION 3: AUTHOR BUILDER ===== */
+const abItems=[
+  {id:'name',w:20,tl:'Πραγματικό όνομα συγγραφέα',ts:'Όχι «Admin» ή ανώνυμο'},
+  {id:'photo',w:10,tl:'Φωτογραφία προσώπου',ts:'Αληθινό πρόσωπο, όχι avatar'},
+  {id:'bio',w:15,tl:'Αναλυτικό βιογραφικό',ts:'Διαφανής προϋπηρεσία'},
+  {id:'cred',w:15,tl:'Τίτλοι σπουδών & πιστοποιήσεις',ts:'Σήμα Εξειδίκευσης'},
+  {id:'link',w:20,tl:'Ενεργός σύνδεσμος LinkedIn',ts:'Επαληθεύσιμο επαγγελματικό προφίλ'},
+  {id:'pub',w:20,tl:'Δημοσιεύσεις / βιβλία / bylines',ts:'Αναφορές σε μεγάλα δίκτυα'}
+];
+(function(){
+  const wrap=document.getElementById('abToggles');
+  const arc=document.getElementById('abArc'), pct=document.getElementById('abPct');
+  const status=document.getElementById('abStatus'), sub=document.getElementById('abSub');
+  const xrName=document.getElementById('xrName'), xrLink=document.getElementById('xrLink'), xrPub=document.getElementById('xrPub');
+  const C=326.7; const state={}; let marked=false;
+  abItems.forEach(it=>{
+    state[it.id]=false;
+    const t=document.createElement('div'); t.className='tg';
+    t.innerHTML=`<div class="sw"></div><div><div class="tl">${it.tl}</div><div class="ts">${it.ts}</div></div>`;
+    t.addEventListener('click',()=>{ state[it.id]=!state[it.id]; t.classList.toggle('on',state[it.id]); update(); if(!marked){marked=true;mark('author');} });
+    wrap.appendChild(t);
+  });
+  function update(){
+    let score=0; abItems.forEach(it=>{ if(state[it.id]) score+=it.w; });
+    pct.textContent=score;
+    arc.style.strokeDashoffset = C - C*score/100;
+    let s,ss,col;
+    if(score===0){ s='Ανώνυμο άρθρο'; ss='Καμία οντότητα για την AI να επαληθεύσει.'; col='#6e6e73'; }
+    else if(score<40){ s='Αδύναμο σήμα'; ss='Υπάρχει όνομα, αλλά λίγα για διασταύρωση.'; col='#d99000'; }
+    else if(score<70){ s='Αναγνωρίσιμη οντότητα'; ss='Η AI αρχίζει να σε εμπιστεύεται ως πηγή.'; col='#3a6df0'; }
+    else { s='Ισχυρή ψηφιακή οντότητα'; ss='Πλήρως επαληθεύσιμη — ιδανική πηγή για RAG.'; col='#0e7c86'; }
+    status.textContent=s; status.style.color=col; sub.textContent=ss;
+    // cross-reference: requires name
+    setXref(xrName, state.name, state.name?'Ταυτότητα συγγραφέα — βρέθηκε':'Καμία ταυτότητα — αδύνατη η διασταύρωση');
+    setXref(xrLink, state.name&&state.link, (state.name&&state.link)?'LinkedIn — επιβεβαιώθηκε':'Επαγγελματικό προφίλ — δεν βρέθηκε');
+    setXref(xrPub, state.name&&state.pub, (state.name&&state.pub)?'Δημοσιεύσεις — εντοπίστηκαν':'Δημοσιεύσεις — δεν εντοπίστηκαν');
+  }
+  function setXref(row,ok,txt){
+    row.classList.toggle('found',ok); row.classList.toggle('miss',!ok);
+    row.querySelector('.x').textContent = ok?'✓':'·';
+    row.querySelector('span:last-child').textContent=txt;
+  }
+  update();
+})();
+
+/* ===== SECTION 4: EXTERNAL VERIFICATION ===== */
+const evData={
+  a:{ name:'TechFix', logo:'T', score:'4,7 ★', scoreCol:'var(--green-deep)',
+    reviews:[
+      {s:'+',cls:'pos',t:'«Γρήγορη επισκευή, πολύ ευγενικοί. Το κινητό δούλεψε άψογα.»'},
+      {s:'+',cls:'pos',t:'«Δίκαιες τιμές και τίμια ενημέρωση για το κόστος.»'},
+      {s:'+',cls:'pos',t:'«Με εξυπηρέτησαν αυθημερόν — τους συνιστώ ανεπιφύλακτα.»'}
+    ],
+    ok:true, verdict:'✅ Ο ισχυρισμός επιβεβαιώνεται από ανεξάρτητες πηγές. Η AI θεωρεί την TechFix αξιόπιστη και μπορεί να την προτείνει ως πηγή/λύση στους χρήστες.' },
+  b:{ name:'QuickRepair', logo:'Q', score:'2,1 ★', scoreCol:'var(--red)',
+    reviews:[
+      {s:'–',cls:'neg',t:'«Καθυστέρησαν 3 εβδομάδες και χρέωσαν παραπάνω απ\u2019 ό,τι συμφωνήσαμε.»'},
+      {s:'–',cls:'neg',t:'«Το πρόβλημα επανήλθε σε μία βδομάδα. Κακή εξυπηρέτηση.»'},
+      {s:'–',cls:'neg',t:'«Δεν απαντούσαν στο τηλέφωνο μετά την πληρωμή.»'}
+    ],
+    ok:false, verdict:'❌ Παρά τον ισχυρισμό «κορυφαίες υπηρεσίες», οι εξωτερικές κριτικές είναι αρνητικές. Το RAG εντοπίζει το χάσμα και ΔΕΝ θα την επιλέξει ως πηγή.' }
+};
+(function(){
+  const seg=document.getElementById('evSeg'), thumb=document.getElementById('evThumb'), btns=seg.querySelectorAll('button');
+  const logo=document.getElementById('evLogo'), name=document.getElementById('evName');
+  const reviews=document.getElementById('evReviews'), list=document.getElementById('evList'), scoreEl=document.getElementById('evScore'), verdict=document.getElementById('evVerdict');
+  let mode='a', timers=[];
+  function place(b){ thumb.style.left=b.offsetLeft+'px'; thumb.style.width=b.offsetWidth+'px'; }
+  function reset(){ timers.forEach(t=>clearTimeout(t)); timers=[]; reviews.classList.remove('show'); list.innerHTML=''; verdict.className='verdict-box'; }
+  function setBiz(){ const d=evData[mode]; logo.textContent=d.logo; name.textContent=d.name; }
+  btns.forEach(b=>b.addEventListener('click',()=>{ btns.forEach(x=>x.classList.toggle('active',x===b)); place(b); mode=b.dataset.mode; reset(); setBiz(); }));
+  requestAnimationFrame(()=>{ place(btns[0]); setBiz(); });
+  window.addEventListener('resize',()=>place(seg.querySelector('.active')));
+
+  document.getElementById('evBtn').addEventListener('click',()=>{
+    reset(); const d=evData[mode];
+    reviews.classList.add('show'); scoreEl.textContent=d.score; scoreEl.style.color=d.scoreCol;
+    d.reviews.forEach((r,i)=>{
+      timers.push(setTimeout(()=>{
+        const el=document.createElement('div'); el.className='rv '+r.cls;
+        el.innerHTML=`<span class="sent">${r.s}</span><span>${r.t}</span>`;
+        list.appendChild(el); requestAnimationFrame(()=>el.classList.add('show'));
+      }, i*420));
+    });
+    timers.push(setTimeout(()=>{
+      verdict.className='verdict-box show '+(d.ok?'ok':'bad');
+      verdict.innerHTML=`<span>${d.ok?'🛡️':'🚫'}</span><span>${d.verdict}</span>`;
+      mark('verify');
+    }, d.reviews.length*420+350));
+  });
+})();
+
+/* ===== SECTION 5: FINAL QUIZ ===== */
+const finalQuestions=[
+  { q:"Τι σημαίνει το πρώτο «E» στο E-E-A-T (που ξεχωρίζει από την Εξειδίκευση);",
+    opts:["Education (Εκπαίδευση)","Experience (Βιωματική Εμπειρία)","Engagement (Αλληλεπίδραση)","Efficiency (Αποδοτικότητα)"], a:1,
+    ex:"Experience = βιωματική επαφή («το έζησα / το δοκίμασα»), σε αντίθεση με την Expertise (θεωρητική/τυπική γνώση)." },
+  { q:"Γιατί η AI απορρίπτει μαζικά τα ανώνυμα άρθρα;",
+    opts:["Είναι πολύ μικρά","Δεν μπορεί να επαληθεύσει την οντότητα/αυθεντία του συγγραφέα","Δεν έχουν εικόνες","Φορτώνουν αργά"], a:1,
+    ex:"Ο αλγόριθμος αντιμετωπίζει τους συγγραφείς ως οντότητες και κάνει cross-referencing (LinkedIn, βιβλία, bylines). Χωρίς ταυτότητα, δεν υπάρχει τι να επαληθευτεί." },
+  { q:"Μια επιχείρηση δηλώνει «κορυφαίες υπηρεσίες», αλλά οι κριτικές σε Trustpilot είναι αρνητικές. Τι κάνει το RAG;",
+    opts:["Την εμπιστεύεται ούτως ή άλλως","Εντοπίζει το χάσμα και δεν την επιλέγει ως πηγή","Διαγράφει τις κριτικές","Ζητά περισσότερα στοιχεία από τον χρήστη"], a:1,
+    ex:"Μέσω Sentiment Analysis διασταυρώνει τον ισχυρισμό με τη φήμη. Όταν δεν συμφωνούν, η αυτο-δήλωση δεν αρκεί." },
+  { q:"Στο GEO, τι αρκεί συχνά για να χτιστεί Κύρος, σε αντίθεση με το παλιό SEO;",
+    opts:["Μόνο ενεργά backlinks","Απλή αναφορά της μάρκας (brand mention), ακόμη χωρίς link","Περισσότερες λέξεις-κλειδιά","Πληρωμένες διαφημίσεις"], a:1,
+    ex:"Το μοντέλο «βλέπει» τη συσχέτιση του ονόματός σου με αναγνωρισμένα μέσα — η αναφορά μετράει, ακόμη κι αν δεν υπάρχει σύνδεσμος." },
+  { q:"Σε ποια θέματα βαραίνει πολλαπλάσια το E-E-A-T;",
+    opts:["Σε θέματα ψυχαγωγίας","Σε YMYL: υγεία, οικονομικά, νομικά, ασφάλεια","Σε αθλητικά νέα","Σε συνταγές μαγειρικής"], a:1,
+    ex:"Στα YMYL (Your Money or Your Life) μια λάθος απάντηση μπορεί να βλάψει, οπότε η AI απαιτεί μέγιστη απόδειξη αυθεντίας." }
+];
+(function(){
+  const c=document.getElementById('finalQuiz');
+  finalQuestions.forEach((qd,qi)=>{
+    const q=document.createElement('div'); q.className='q';
+    q.innerHTML=`<div class="qn">ΕΡΩΤΗΣΗ ${qi+1}</div><div class="qt">${qd.q}</div>`;
+    const opts=document.createElement('div'); opts.className='opts';
+    qd.opts.forEach((o,oi)=>{
+      const b=document.createElement('button'); b.className='opt'; b.innerHTML=`<span class="mk"></span><span>${o}</span>`;
+      b.addEventListener('click',()=>{
+        const all=opts.querySelectorAll('.opt'); all.forEach(x=>x.classList.add('locked'));
+        const correct=oi===qd.a; b.classList.remove('locked'); b.classList.add(correct?'correct':'wrong');
+        if(!correct){ all[qd.a].classList.remove('locked'); all[qd.a].classList.add('correct'); }
+        q.querySelector('.explain').classList.add('show'); mark('fin'+qi);
+        if(correct) finalCorrect++; updateScore();
+      });
+      opts.appendChild(b);
+    });
+    q.appendChild(opts);
+    const ex=document.createElement('div'); ex.className='explain'; ex.innerHTML=`💡 ${qd.ex}`; q.appendChild(ex);
+    c.appendChild(q);
+  });
+})();
+let finalCorrect=0;
+function updateScore(){ document.getElementById('finalScore').textContent=`Σκορ κουίζ: ${finalCorrect} / ${finalQuestions.length}`; }
+
+/* ===== SCROLL REVEAL ===== */
+const io=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
