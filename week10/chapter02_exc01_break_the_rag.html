@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 2: Break the RAG</title>
+    <style>
+        :root {
+            --brand-color: #7c3aed; /* Μωβ για αυτό το Lab */
+            --brand-hover: #6d28d9;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--brand-color);
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+        }
+
+        .intro-box {
+            background-color: #f3e8ff;
+            border-left: 4px solid var(--brand-color);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .section-title {
+            background-color: var(--brand-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-top: 2.5rem;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"], 
+        select, 
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+        }
+
+        .query-box {
+            background-color: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            background-color: var(--brand-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--brand-hover);
+        }
+
+        /* Ρυθμίσεις για εκτύπωση (PDF) */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+            button {
+                display: none;
+            }
+            input, select, textarea {
+                border: none;
+                border-bottom: 1px solid #000;
+                border-radius: 0;
+                padding: 0.25rem 0;
+                background: transparent;
+                -webkit-appearance: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lab 2: Break the RAG</h1>
+        
+        <div class="intro-box">
+            <p>Στόχος μας είναι να δούμε πώς συμπεριφέρονται οι μηχανές Τεχνητής Νοημοσύνης όταν <strong>δεν έχουν επαρκή δεδομένα</strong>. Θα κάνετε δύο αναζητήσεις: μία για ένα πολύ άγνωστο θέμα και μία για ένα πολύ διάσημο, και θα συγκρίνετε τα αποτελέσματα.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="team-name">Όνομα Μαθητή / Μαθήτριας:</label>
+            <input type="text" id="team-name" placeholder="Π.χ. Ευαγγελία Ντιβοπούλου">
+        </div>
+
+        <h2 class="section-title">Το Πείραμα της Αναζήτησης</h2>
+        
+        <div class="query-box">
+            <div class="form-group">
+                <label>1. Η "Άγνωστη" Αναζήτηση (Τοπική/Χωρίς ψηφιακό αποτύπωμα):</label>
+                <input type="text" placeholder="Π.χ. Τι μενού έχει η ταβέρνα της γειτονιάς μου;">
+            </div>
+            <div class="form-group">
+                <label>2. Η "Διάσημη" Αναζήτηση (Ίδιας κατηγορίας):</label>
+                <input type="text" placeholder="Π.χ. Τι μενού έχει ένα διάσημο εστιατόριο;">
+            </div>
+        </div>
+
+        <h2 class="section-title">Πίνακας 1: Αποτελέσματα για την "ΑΓΝΩΣΤΗ" Αναζήτηση</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Πλατφόρμα</th>
+                    <th>Τι είδους απάντηση λάβατε;</th>
+                    <th>Παρατηρήσεις / Λεπτομέρειες</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong><a href="https://www.google.com/">Google</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="links_only">Έβγαλε μόνο απλά links (Όχι AI)</option>
+                            <option value="ai_overview">Εμφάνισε το AI Overview (AI Summary)</option>
+                            <option value="nothing">Δεν βρήκε απολύτως τίποτα</option>
+                        </select>
+                    </td>
+                    <td><input type="text" placeholder="Τι έδειξε;"></td>
+                </tr>
+                <tr>
+                    <td><strong><a href="https://www.perplexity.ai/">Perplexity AI</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="hallucination">Έβγαλε Ψευδαίσθηση (Είπε ψέματα)</option>
+                            <option value="irrelevant">Έδωσε άσχετες πηγές</option>
+                            <option value="refusal">Αρνήθηκε να απαντήσει (Δεν ξέρω)</option>
+                            <option value="correct">Έδωσε σωστή απάντηση</option>
+                        </select>
+                    </td>
+                    <td><input type="text" placeholder="Π.χ. Μπέρδεψε την ταβέρνα με άλλη"></td>
+                </tr>
+                <tr>
+                    <td><strong><a href="https://chatgpt.com/">ChatGPT (Search)</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="hallucination">Έβγαλε Ψευδαίσθηση (Είπε ψέματα)</option>
+                            <option value="irrelevant">Έδωσε άσχετες πηγές</option>
+                            <option value="refusal">Αρνήθηκε να απαντήσει (Δεν ξέρω)</option>
+                            <option value="correct">Έδωσε σωστή απάντηση</option>
+                        </select>
+                    </td>
+                    <td><input type="text" placeholder="Π.χ. Εφηύρε δικά του φαγητά"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-title">Πίνακας 2: Αποτελέσματα για τη "ΔΙΑΣΗΜΗ" Αναζήτηση</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Πλατφόρμα</th>
+                    <th>Τι είδους απάντηση λάβατε;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong><a href="https://www.google.com/">Google</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="links_only">Έβγαλε μόνο απλά links (Όχι AI)</option>
+                            <option value="ai_overview">Εμφάνισε το AI Overview (AI Summary)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong><a href="https://www.perplexity.ai/">Perplexity AI</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="poor">Μέτρια απάντηση, λίγες πηγές</option>
+                            <option value="excellent">Τέλεια απάντηση με πολλές, έγκυρες πηγές</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong><a href="https://chatgpt.com/">ChatGPT (Search)</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="poor">Μέτρια απάντηση, λίγες πηγές</option>
+                            <option value="excellent">Τέλεια απάντηση με πολλές, έγκυρες πηγές</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-title">Αποτελέσματα</h2>
+        <div class="form-group">
+            <label for="conclusion">Με βάση αυτά που είδατε: Αν μια τοπική επιχείρηση δεν έχει ιστοσελίδα και άρθρα στο ίντερνετ, τι θα βλέπουν οι χρήστες όταν ρωτούν την Τεχνητή Νοημοσύνη γι' αυτήν στο μέλλον;</label>
+            <textarea id="conclusion" placeholder="Η επιχείρηση κινδυνεύει από..."></textarea>
+        </div>
+
+        <button onclick="window.print()">Αποθήκευση Αναφοράς (PDF) / Εκτύπωση</button>
+    </div>
+
+</body>
+</html>
