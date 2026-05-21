@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 3: Semantic Cluster Mapping</title>
+    <style>
+        :root {
+            --brand-color: #0f766e; /* Teal αισθητική για αυτό το εργαστήριο */
+            --brand-hover: #115e59;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--brand-color);
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+        }
+
+        .intro-box {
+            background-color: #f0fdfa;
+            border-left: 4px solid var(--brand-color);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .scenario-box {
+            background-color: #f1f5f9;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            background-color: var(--brand-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-top: 2.5rem;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"], 
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .prompt-box {
+            background-color: #f8fafc;
+            border: 1px dashed var(--brand-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .copy-btn {
+            background-color: #e2e8f0;
+            color: var(--text-main);
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .copy-btn:hover {
+            background-color: #cbd5e1;
+        }
+
+        .submit-btn {
+            background-color: var(--brand-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2rem;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--brand-hover);
+        }
+
+        @media print {
+            body { background-color: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; }
+            .submit-btn, .copy-btn { display: none; }
+            input, textarea { border: none; border-bottom: 1px solid #000; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lab 3: Semantic Cluster Mapping</h1>
+        
+        <div class="intro-box">
+            <p>Οι μηχανές AI δεν μετρούν απλώς πόσες φορές γράφετε μια λέξη. Αναζητούν ένα δίκτυο από σχετικές έννοιες, τοποθεσίες και οντότητες. Σε αυτό το εργαστήριο θα βρείτε τα κενά στην ύλη ενός ανταγωνιστή.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="team-name"> Όνομα Μαθητή / Μαθήτριας:</label>
+            <input type="text" id="team-name" placeholder="Π.χ. Επίθετο Ονοματόπουλου">
+        </div>
+
+        <div class="scenario-box">
+            <h3>Σύνδεση με την Πράξη</h3>
+            <p><strong>Η Επιχείρηση:</strong> Ένα σύγχρονο φωτογραφείο στη Θεσσαλονίκη. Ειδικεύεται σε καλλιτεχνικά πορτρέτα και φωτογραφίσεις γεγονότων (γάμοι, βαπτίσεις).</p>
+            <p><strong>Κεντρική Οντότητα (Central Entity):</strong> Φωτογραφείο Θεσσαλονίκη</p>
+        </div>
+
+        <h2 class="section-title">Βήμα 1: Χαρτογράφηση με το Μυαλό</h2>
+        <p>Σκεφτείτε ως ειδικοί. Ποιες 10 σχετικές έννοιες, υπηρεσίες, τοποθεσίες ή εξοπλισμό περιμένει να διαβάσει η AI σε μια σελίδα υψηλής ποιότητας για αυτό το φωτογραφείο;</p>
+        
+        <div class="grid-inputs">
+            <input type="text" placeholder="1. Π.χ. Φωτογράφιση γάμου">
+            <input type="text" placeholder="2. Π.χ. Ψηφιακό άλμπουμ">
+            <input type="text" placeholder="3. Π.χ. Καλλιτεχνικό πορτρέτο">
+            <input type="text" placeholder="4. Π.χ. Λευκός Πύργος (Τοποθεσία)">
+            <input type="text" placeholder="5.">
+            <input type="text" placeholder="6.">
+            <input type="text" placeholder="7.">
+            <input type="text" placeholder="8.">
+            <input type="text" placeholder="9.">
+            <input type="text" placeholder="10.">
+        </div>
+
+        <h2 class="section-title">Βήμα 2: Έλεγχος του Ανταγωνιστή με AI</h2>
+        <p>Βρείτε την ιστοσελίδα ενός τυχαίου φωτογραφείου στη Θεσσαλονίκη. Αντιγράψτε το κείμενο της αρχικής του σελίδας. Ανοίξτε το ChatGPT, επικολλήστε το παρακάτω κείμενο (Prompt) μαζί με το κείμενο του ανταγωνιστή και δείτε τι θα σας απαντήσει.</p>
+        
+        <div class="prompt-box">
+            <p id="prompt-text">"Ενεργείς ως ειδικός στο Generative Engine Optimization (GEO). Σου παραθέτω το κείμενο από την ιστοσελίδα ενός φωτογραφείου στη Θεσσαλονίκη. Θέλω να αναλύσεις ποιες σημαντικές σημασιολογικές οντότητες (έννοιες, τοποθεσίες της πόλης, τεχνικές, είδη φωτογράφισης) λείπουν από αυτό το κείμενο, τις οποίες ένας έμπειρος φωτογράφος θα έπρεπε να αναφέρει για να θεωρηθεί η σελίδα του έγκυρη πηγή από μια μηχανή AI. Δώσε μου μια σύντομη λίστα με τα κενά περιεχομένου."</p>
+            <button class="copy-btn" onclick="copyPrompt()">Αντιγραφή Prompt</button>
+        </div>
+
+        <h2 class="section-title">Βήμα 3: Αναφορά Κενών (Gap Analysis)</h2>
+        <p>Με βάση την απάντηση της AI, καταγράψτε τι λείπει από τον ανταγωνιστή. Αυτά τα στοιχεία είναι οι ευκαιρίες σας.</p>
+
+        <div class="form-group">
+            <label for="missing-entities">Ποιες σημαντικές έννοιες ή οντότητες ξέχασε να αναφέρει ο ανταγωνιστής;</label>
+            <textarea id="missing-entities" placeholder="Π.χ. Δεν αναφέρει καθόλου εξωτερικές φωτογραφίσεις στην Άνω Πόλη ή τη χρήση drone..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="action-plan">Αν αυτός ήταν ο πελάτης σας, τι συγκεκριμένο περιεχόμενο θα του λέγατε να προσθέσει για να τον επιλέγει το RAG της Google;</label>
+            <textarea id="action-plan" placeholder="Προτείνουμε τη δημιουργία μιας ενότητας για..."></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="window.print()">Αποθήκευση Αναφοράς (PDF) / Εκτύπωση</button>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const text = document.getElementById('prompt-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Το prompt αντιγράφηκε! Μπορείτε να το επικολλήσετε στο ChatGPT.');
+            });
+        }
+    </script>
+</body>
+</html>
