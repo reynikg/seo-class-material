@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The AI Audit: Έλεγχος Τεχνητής Νοημοσύνης</title>
+    <style>
+        :root {
+            --brand-color: #2563eb;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--brand-color);
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+        }
+
+        .intro-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--brand-color);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .section-title {
+            background-color: var(--brand-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-top: 2.5rem;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"], 
+        input[type="number"], 
+        select, 
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+        }
+
+        .source-card {
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            background-color: #f8fafc;
+        }
+
+        .source-card h3 {
+            margin-top: 0;
+            color: var(--brand-color);
+        }
+
+        button {
+            background-color: var(--brand-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Ρυθμίσεις για καθαρή εκτύπωση / αποθήκευση PDF */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+            button {
+                display: none;
+            }
+            input, select, textarea {
+                border: none;
+                border-bottom: 1px solid #000;
+                border-radius: 0;
+                padding: 0.25rem 0;
+                background: transparent;
+                -webkit-appearance: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>The AI Audit</h1>
+        
+        <div class="intro-box">
+            <p>Με την εργασία αυτήν θα δούμε πώς οι μηχανές αναζήτησης επιλέγουν πληροφορίες. Γράψτε ένα ερώτημα. Ψάξτε το σε τρεις διαφορετικές πλατφόρμες. Καταγράψτε τα δεδομένα και βγάλτε τα συμπεράσματά σας.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="team-name">Όνομα Μαθητή / Μαθήτριας:</label>
+            <input type="text" id="team-name" placeholder="Π.χ. Κωνσταντίνος Κωδικόπουλος">
+        </div>
+
+        <div class="form-group">
+            <label for="query">Το Ερώτημά σας (Query):</label>
+            <input type="text" id="query" placeholder="Π.χ. Ποια είναι τα δικαιολογητικά για νέο e-shop;">
+        </div>
+
+        <h2 class="section-title">Μέρος Α: Πίνακας Σύγκρισης</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Πλατφόρμα</th>
+                    <th>Άμεση απάντηση AI;</th>
+                    <th>Αριθμός Πηγών (Citations)</th>
+                    <th>Ελληνικό site στις πηγές;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong><a href="https://www.google.com/">Google</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="yes">Ναι</option>
+                            <option value="no">Όχι</option>
+                        </select>
+                    </td>
+                    <td><input type="number" min="0"></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="yes">Ναι</option>
+                            <option value="no">Όχι</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong><a href="https://www.perplexity.ai/">Perplexity AI</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="yes">Ναι</option>
+                            <option value="no">Όχι</option>
+                        </select>
+                    </td>
+                    <td><input type="number" min="0"></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="yes">Ναι</option>
+                            <option value="no">Όχι</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong><a href="https://chatgpt.com/">ChatGPT (Search)</a></strong></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="yes">Ναι</option>
+                            <option value="no">Όχι</option>
+                        </select>
+                    </td>
+                    <td><input type="number" min="0"></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="yes">Ναι</option>
+                            <option value="no">Όχι</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-title">Μέρος Β: Ανάλυση Πηγών</h2>
+        <p>Ανοίξτε 2 πηγές που επέλεξε το Perplexity ή το ChatGPT για να στηρίξει την απάντησή του.</p>
+
+        <div class="source-card">
+            <h3>Πηγή 1</h3>
+            <div class="form-group">
+                <label>Όνομα Ιστοσελίδας:</label>
+                <input type="text" placeholder="Π.χ. Υπουργείο Ανάπτυξης">
+            </div>
+            <div class="form-group">
+                <label>Τι είδους σελίδα είναι;</label>
+                <select>
+                    <option value="">Επιλέξτε...</option>
+                    <option value="blog">Άρθρο Blog</option>
+                    <option value="news">Ειδησεογραφικό / Portal</option>
+                    <option value="official">Επίσημη Εταιρική Σελίδα</option>
+                    <option value="forum">Forum / Συζήτηση</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Υπάρχει όνομα συγγραφέα;</label>
+                <select>
+                    <option value="">Επιλέξτε...</option>
+                    <option value="yes">Ναι, υπογράφει κάποιος</option>
+                    <option value="no">Όχι, είναι ανώνυμο</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Ποιο εργαλείο χρησιμοποιήσατε;</label>
+                <select>
+                    <option value="">Επιλέξτε...</option>
+                    <option value="yes">ChatGPT (με search)</option>
+                    <option value="no">Perplexity AI</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="source-card">
+            <h3>Πηγή 2</h3>
+            <div class="form-group">
+                <label>Όνομα Ιστοσελίδας:</label>
+                <input type="text" placeholder="Π.χ. TaxHeaven">
+            </div>
+            <div class="form-group">
+                <label>Πού βρίσκεται η απάντηση μέσα στο κείμενο;</label>
+                <select>
+                    <option value="">Επιλέξτε...</option>
+                    <option value="start">Στην αρχή (Άμεσα)</option>
+                    <option value="middle">Στη μέση του κειμένου</option>
+                    <option value="end">Κρυμμένη στο τέλος</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Έχει καθαρή δομή (λίστες ή πίνακες);</label>
+                <select>
+                    <option value="">Επιλέξτε...</option>
+                    <option value="yes">Ναι, διαβάζεται εύκολα</option>
+                    <option value="no">Όχι, έχει μεγάλα μπλοκ κειμένου</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Ποιο εργαλείο χρησιμοποιήσατε;</label>
+                <select>
+                    <option value="">Επιλέξτε...</option>
+                    <option value="yes">ChatGPT (με search)</option>
+                    <option value="no">Perplexity AI</option>
+                </select>
+            </div>
+        </div>
+
+        <h2 class="section-title">Μέρος Γ: Εξαγωγή Συμπερασμάτων</h2>
+        <div class="form-group">
+            <label for="conclusion">Τι κοινό χαρακτηριστικό έχουν τα sites που "κερδίζουν" μια θέση στις πηγές της Τεχνητής Νοημοσύνης; Γιατί τα εμπιστεύεται ο αλγόριθμος;</label>
+            <textarea id="conclusion" placeholder="Γράψτε τη γνώμη σας εδώ..."></textarea>
+        </div>
+
+        <button onclick="window.print()">Αποθήκευση Αναφοράς (PDF) / Εκτύπωση</button>
+    </div>
+
+</body>
+</html>
