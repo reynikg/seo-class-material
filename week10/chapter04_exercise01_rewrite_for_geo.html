@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4: Rewrite for GEO</title>
+    <style>
+        :root {
+            --brand-color: #0369a1; /* Σκούρο μπλε για επαγγελματικό ύφος */
+            --brand-hover: #075985;
+            --bg-light: #f0f9ff;
+            --text-main: #0f172a;
+            --border-color: #cbd5e1;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--brand-color);
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .box {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+        }
+
+        .box-title {
+            font-weight: bold;
+            color: var(--brand-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--brand-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .bad-text {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        textarea {
+            width: 100%;
+            height: 350px;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--brand-color);
+        }
+
+        .checklist {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            accent-color: var(--success);
+            cursor: pointer;
+        }
+
+        .prompt-box {
+            background-color: #f1f5f9;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--brand-color);
+            margin-top: 1rem;
+        }
+
+        .copy-btn {
+            background-color: var(--brand-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--brand-hover);
+        }
+
+        .debrief-section {
+            margin-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lab 4: Rewrite for GEO</h1>
+        <p>Ο στόχος σας είναι να πάρετε ένα κείμενο παλαιάς κοπής, γεμάτο φλυαρίες, και να το μετατρέψετε σε ένα καθαρό, δομημένο άρθρο που η Τεχνητή Νοημοσύνη θα επιλέξει ως κορυφαία πηγή.</p>
+        
+        <input type="text" placeholder="Όνομα Μαθητή / Μαθήτριας" style="padding: 0.5rem; width: 300px; margin-bottom: 1rem; border: 1px solid #cbd5e1; border-radius: 4px;">
+
+        <div class="grid-layout">
+            <div class="box">
+                <div class="box-title">Το Παλιό Κείμενο (Κακό SEO)</div>
+                <div class="bad-text">
+                    <strong>Τίτλος:</strong> Στρώμα για πόνο στη μέση - Βρείτε το καλύτερο στρώμα για πόνο στη μέση<br>
+                    <strong>Συγγραφέας:</strong> Admin<br><br>
+                    Ο πόνος στη μέση είναι ένα πρόβλημα. Όλοι ψάχνουν το ιδανικό στρώμα για πόνο στη μέση. Αν έχετε ενοχλήσεις, ένα καλό στρώμα για πόνο στη μέση θα σας σώσει. Η ιστορία των στρωμάτων ξεκινάει από την αρχαιότητα, όταν οι άνθρωποι κοιμόντουσαν στα άχυρα. Σήμερα η τεχνολογία έχει προχωρήσει. Πώς διαλέγουμε όμως; Είναι δύσκολο να βρεις το σωστό στρώμα για πόνο στη μέση. Πρέπει να κοιτάξετε τα υλικά και την εγγύηση. Κάποιοι προτιμούν τα μαλακά. Κάποιοι τα σκληρά. Τελικά, οι έρευνες λένε ότι αν πονάει η μέση σας, η καλύτερη επιλογή είναι ένα ανατομικό στρώμα μέτριας σκληρότητας από memory foam, γιατί παίρνει το σχήμα του σώματος. Αγοράστε σήμερα το δικό σας στρώμα.
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-title">Ο Χώρος Εργασίας σας (GEO Version)</div>
+                <textarea id="geo-version" placeholder="Γράψτε εδώ το νέο, βελτιστοποιημένο κείμενο... Ξεκινήστε κατευθείαν με την απάντηση!"></textarea>
+            </div>
+        </div>
+
+        <div class="checklist">
+            <div class="box-title" style="margin-bottom: 1rem;">Λίστα Ελέγχου (GEO Checklist)</div>
+            <label class="checklist-item">
+                <input type="checkbox"> 1. <strong>BLUF:</strong> Έδωσα την απάντηση (μέτρια σκληρότητα, memory foam) στην πρώτη πρόταση.
+            </label>
+            <label class="checklist-item">
+                <input type="checkbox"> 2. <strong>Δομή:</strong> Έφτιαξα μια καθαρή λίστα με κουκκίδες.
+            </label>
+            <label class="checklist-item">
+                <input type="checkbox"> 3. <strong>Κέρδος Πληροφορίας:</strong> Πρόσθεσα ένα φανταστικό στατιστικό ή δήλωση (quote) ειδικού.
+            </label>
+            <label class="checklist-item">
+                <input type="checkbox"> 4. <strong>Συνομιλιακό FAQ:</strong> Έγραψα 3 ερωτήσεις-απαντήσεις στο τέλος σε φυσική γλώσσα.
+            </label>
+            <label class="checklist-item">
+                <input type="checkbox"> 5. <strong>E-E-A-T:</strong> Έσβησα το "Admin" και έβαλα το όνομά μου με ένα μικρό βιογραφικό.
+            </label>
+        </div>
+
+        <div class="debrief-section">
+            <h2>Δοκιμή στην Τεχνητή Νοημοσύνη</h2>
+            <p>Ανοίξτε το ChatGPT. Δώστε του το παρακάτω Prompt, επικολλώντας πρώτα το <strong>παλιό</strong> κείμενο και μετά κάντε το ίδιο (σε νέα συνομιλία) με το <strong>νέο</strong> σας κείμενο. Το κείμενο που γράψατε εσείς αντιγράφεται αυτόματα όταν πατήσετε το κουμπί <strong>Αντιγραφή Prompt</strong>.</p>
+            
+            <div class="prompt-box">
+                <p id="test-prompt">Διάβασε αποκλειστικά το παρακάτω κείμενο. Βάσει αυτού, απάντησε μου σύντομα: Ποιο είναι το καλύτερο στρώμα για τους πόνους στη μέση;
+</p>
+                <button class="copy-btn" onclick="copyPrompt()">Αντιγραφή Prompt</button>
+            </div>
+
+            <h3 style="margin-top: 2rem;">Τα Συμπεράσματά σας</h3>
+            <textarea style="height: 100px;" placeholder="Συγκρίνετε τις δύο απαντήσεις. Πώς αντέδρασε το AI στη λίστα σας και στο 'στατιστικό' που εφεύρατε;"></textarea>
+        </div>
+    </div>
+
+    <script>
+        function copyPrompt() {
+            const text = document.getElementById('test-prompt').innerText;
+            const text2 = document.getElementById('geo-version').value;
+            navigator.clipboard.writeText(text + ' ' + text2).then(() => {
+                alert('Το Prompt αντιγράφηκε! Ανοίξτε το ChatGPT ή το Perplexity.');
+            });
+        }
+    </script>
+</body>
+</html>
