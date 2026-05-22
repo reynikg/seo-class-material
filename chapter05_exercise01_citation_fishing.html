@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 5: Citation Fishing</title>
+    <style>
+        :root {
+            --brand-color: #ea580c; /* Πορτοκαλί για το τελευταίο Lab */
+            --brand-hover: #c2410c;
+            --bg-light: #fff7ed;
+            --text-main: #1c1917;
+            --border-color: #fdba74;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-top: 6px solid var(--brand-color);
+        }
+
+        h1 {
+            color: var(--brand-color);
+            margin-top: 0;
+            border-bottom: 2px solid #ffedd5;
+            padding-bottom: 1rem;
+        }
+
+        .intro-box {
+            background-color: #ffedd5;
+            border-left: 4px solid var(--brand-color);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .section-title {
+            background-color: var(--brand-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-top: 2.5rem;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"], 
+        select, 
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .query-list {
+            display: grid;
+            gap: 1rem;
+            background: #fafaf9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e7e5e4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ffedd5;
+            color: #9a3412;
+        }
+
+        .strategy-box {
+            background-color: #fff;
+            border: 2px dashed var(--brand-color);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        button {
+            background-color: var(--brand-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--brand-hover);
+        }
+
+        @media print {
+            body { background-color: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; border: none; }
+            button { display: none; }
+            input, select, textarea { border: none; border-bottom: 1px solid #000; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lab 5: Citation Fishing</h1>
+        
+        <div class="intro-box">
+            <p>Σε αυτό το εργαστήριο θα κάνετε μια έρευνα αγοράς. Θα διαπιστώσετε ποιες εταιρείες κερδίζουν τις αναφορές της Τεχνητής Νοημοσύνης σε μια συγκεκριμένη κατηγορία.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="team-name">Όνομα Μαθητή / Μαθήτριας:</label>
+            <input type="text" id="team-name" placeholder="Π.χ. Όνομα Επωνυμόπουλου">
+        </div>
+
+        <div class="form-group">
+            <label for="category">Η Κατηγορία της Έρευνάς σας:</label>
+            <input type="text" id="category" placeholder="Π.χ. Καλύτερα αθλητικά παπούτσια 2026">
+        </div>
+
+        <h2 class="section-title">Βήμα 1: Οι 5 Ερωτήσεις</h2>
+        <p>Γράψτε πέντε διαφορετικούς τρόπους διατύπωσης για την ίδια αναζήτηση. Δοκιμάστε τις ερωτήσεις στο Perplexity ή στο ChatGPT.</p>
+        
+        <div class="query-list">
+            <input type="text" placeholder="Ερώτηση 1...">
+            <input type="text" placeholder="Ερώτηση 2...">
+            <input type="text" placeholder="Ερώτηση 3...">
+            <input type="text" placeholder="Ερώτηση 4...">
+            <input type="text" placeholder="Ερώτηση 5...">
+        </div>
+
+        <h2 class="section-title">Βήμα 2: Οι Νικητές (AI Share of Voice)</h2>
+        <p>Ποια τρία sites εμφανίστηκαν τις περισσότερες φορές ως πηγές (citations) σε αυτές τις 5 ερωτήσεις;</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Κατάταξη</th>
+                    <th>Όνομα Ιστοσελίδας / Brand</th>
+                    <th>Τύπος Περιεχομένου</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#1</strong></td>
+                    <td><input type="text" placeholder="Π.χ. Skroutz, TechBlog..."></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="listicle">Λίστα (Top 10)</option>
+                            <option value="review">Κριτική (Review)</option>
+                            <option value="blog">Ενημερωτικό Άρθρο</option>
+                            <option value="product">Σελίδα Προϊόντος (E-shop)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#2</strong></td>
+                    <td><input type="text"></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="listicle">Λίστα (Top 10)</option>
+                            <option value="review">Κριτική (Review)</option>
+                            <option value="blog">Ενημερωτικό Άρθρο</option>
+                            <option value="product">Σελίδα Προϊόντος (E-shop)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#3</strong></td>
+                    <td><input type="text"></td>
+                    <td>
+                        <select>
+                            <option value="">Επιλέξτε...</option>
+                            <option value="listicle">Λίστα (Top 10)</option>
+                            <option value="review">Κριτική (Review)</option>
+                            <option value="blog">Ενημερωτικό Άρθρο</option>
+                            <option value="product">Σελίδα Προϊόντος (E-shop)</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-title">Βήμα 3: Το Παραδοτέο (GEO Entry Strategy)</h2>
+        <p>Αν ένας πελάτης σας ζητήσει να τον βάλετε στις απαντήσεις της Τεχνητής Νοημοσύνης για αυτή την κατηγορία, ποιο είναι το σχέδιό σας;</p>
+
+        <div class="strategy-box">
+            <label for="strategy">Στρατηγική Εισόδου (1 Παράγραφος):</label>
+            <textarea id="strategy" placeholder="Τι περιεχόμενο θα δημιουργήσετε; Ποια ερωτήματα θα απαντά; Τι δομή θα έχει για να νικήσει τα σημερινά sites;"></textarea>
+        </div>
+
+        <button onclick="window.print()">Αποθήκευση Στρατηγικής (PDF) / Εκτύπωση</button>
+    </div>
+
+</body>
+</html>
